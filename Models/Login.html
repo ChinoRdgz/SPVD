@@ -1,20 +1,26 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Firebase Test</title>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="/SPVD/Views/Login.css" />
+  </head>
 
-  <input type="text" id="nombre" placeholder="Escribe aquí">
-  <button id="enviar">ENVIAR</button>
-  <br><br>
-  <button id="mostrar">Mostrar</button>
-  
-  <!-- Aquí se mostrará el valor que obtengamos de Firebase -->
-  <div id="resultado"></div>
+  <body>
+    <div class="container">
+        <div class="left-panel">
+            <img src="/SPVD/Images/VanguardiaDigital.png" alt="Logo">
+            <p>Bienvenido</p>
+            <input type="text" id="user" placeholder="Usuario" />
+            <input type="password" id="password" placeholder="Contraseña" />
+            <button id="login">Iniciar Sesión</button>
+            <button id="forgot">Olvidé mi contraseña</button>
+        </div>
+        <div class="right-panel"></div>
+    </div>
 
-  <script type="module" src="./prueba.js"></script>
+    <script type="module" src="/SPVD/Controllers/Login.js"></script>
 </body>
+
 </html>
