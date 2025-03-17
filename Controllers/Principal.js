@@ -17,8 +17,7 @@ const db = getFirestore(app);
 console.log("Firebase inicializado:", app);
 console.log("Firestore conectado:", db);
 
-document.getElementById("enviar").addEventListener("click", enviarDatos);
-document.getElementById("mostrar").addEventListener("click", mostrarDatos);
+
 
 async function enviarDatos() {
     let valor = document.getElementById("nombre").value;
@@ -56,3 +55,16 @@ async function mostrarDatos() {
             "Ocurrió un error al obtener los datos.";
     }
 }
+
+function openNav() {
+    document.getElementById("sidebar").style.width = "250px";
+    document.getElementById("main").style.marginLeft = "250px";
+}
+
+function closeNav() {
+    document.getElementById("sidebar").style.width = "0";
+    document.getElementById("main").style.marginLeft = "0";
+}
+
+window.openNav = openNav;
+window.closeNav = closeNav;

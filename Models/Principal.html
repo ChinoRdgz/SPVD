@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/SPVD/Views/Principal.css">
+</head>
+<body>
+
+    <div id="sidebar" class="sidebar">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="#">Home</a>
+        <a href="#">Services</a>
+        <a href="#">Clients</a>
+        <a href="#">Contact</a>
+    </div>
+
+    <div id="main">
+        <button class="openbtn" onclick="openNav()">Open Sidebar</button>
+        <h2>Contenido Principal</h2>
+        <p>Este es el contenido principal de la página.</p>
+        <div id="resultado"></div>
+    </div>
+    
+    <script type="module" src="/SPVD/Controllers/Principal.js" defer></script>
+</body>
+</html>

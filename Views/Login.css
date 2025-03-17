@@ -27,7 +27,7 @@ body {
 }
 
 .left-panel img {
-    width: 100px;
+    width: 200px;
     margin-bottom: 10px;
 }
 
@@ -37,27 +37,33 @@ body {
 }
 
 input {
-    width: 100%;
+    width: 50%;
     padding: 10px;
     margin: 10px 0;
     border: none;
-    border-radius: 5px;
+    border-radius: 15px;
 }
 
 button {
-    width: 100%;
+    width: 30%;
     padding: 10px;
     border: none;
-    border-radius: 5px;
+    border-radius: 10px;
     background-color: #B71C1C;
     color: white;
     font-size: 16px;
     cursor: pointer;
 }
+#forgot {
+    color: black;
+    opacity: 0.5;
+    background-color: transparent;
+    text-decoration: underline;
+}
 
 .right-panel {
     width: 50%;
-    background: url('/SPVD/Images/fondo1.avif') no-repeat center center;
+    background: url('/SPVD/Images/fondo1.jpg') no-repeat center center;
     background-size: cover;
     border-left: 3px solid #1E1E1E;
 }
