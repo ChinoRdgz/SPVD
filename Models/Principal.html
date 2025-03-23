@@ -5,22 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="/SPVD/Views/Principal.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body>
 
     <div id="sidebar" class="sidebar">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <a href="#">Home</a>
-        <a href="#">Services</a>
-        <a href="#">Clients</a>
-        <a href="#">Contact</a>
+        <button class="closebtn" onclick="closeNav()">x</button>
+        <img src="/SPVD/Images/VanguardiaDigital.png" alt="">
+        <a href="#" onclick="showSection('dashboard')">
+            <i class='bx bxs-dashboard'></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="#" onclick="showSection('monitoreo')">Monitoreo</a>
+        <a href="#" onclick="showSection('registros')">Registros</a>
+        <a href="#" onclick="showSection('clientes')">Clientes</a>
+        <a href="#" onclick="showSection('sepalacola')">SEPALACOLA</a>
+        <a href="#" class="logout-container" onclick="window.location.href='/SPVD/Models/Login.html'">
+            <i class='bx bx-log-out-circle'></i>
+            <span>Cerrar sesión</span>
+        </a>
+        
     </div>
 
     <div id="main">
-        <button class="openbtn" onclick="openNav()">Open Sidebar</button>
-        <h2>Contenido Principal</h2>
-        <p>Este es el contenido principal de la página.</p>
-        <div id="resultado"></div>
+        <button class="openbtn" onclick="openNav()">></button>
+        
+        <div id="contenido">
+            <p id="dashboard" class="section">Contenido del Dashboard</p>
+            <p id="monitoreo" class="section" style="display:none;">Contenido del Monitoreo</p>
+            <p id="clientes" class="section" style="display:none;">Contenido de Clientes</p>
+            <p id="sepalacola" class="section" style="display:none;">Contenido de SEPALACOLA</p>
+        </div>
     </div>
     
     <script type="module" src="/SPVD/Controllers/Principal.js" defer></script>

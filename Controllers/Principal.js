@@ -17,8 +17,6 @@ const db = getFirestore(app);
 console.log("Firebase inicializado:", app);
 console.log("Firestore conectado:", db);
 
-
-
 async function enviarDatos() {
     let valor = document.getElementById("nombre").value;
     if (valor.trim() !== "") {
@@ -59,12 +57,23 @@ async function mostrarDatos() {
 function openNav() {
     document.getElementById("sidebar").style.width = "250px";
     document.getElementById("main").style.marginLeft = "250px";
+    document.querySelector(".openbtn").classList.add("hidden"); // Hide the open button
 }
 
 function closeNav() {
     document.getElementById("sidebar").style.width = "0";
     document.getElementById("main").style.marginLeft = "0";
+    document.querySelector(".openbtn").classList.remove("hidden"); // Show the open button
+}
+
+function showSection(sectionId) {
+    const sections = document.querySelectorAll('.section');
+    sections.forEach(section => {
+        section.style.display = 'none';
+    });
+    document.getElementById(sectionId).style.display = 'block';
 }
 
 window.openNav = openNav;
 window.closeNav = closeNav;
+window.showSection = showSection;

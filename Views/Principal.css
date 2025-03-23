@@ -9,19 +9,26 @@ body {
     z-index: 1;
     top: 0;
     left: 0;
-    background-color: #111;
+    background-color: #D32F2F;
     overflow-x: hidden;
     transition: 0.5s;
     padding-top: 60px;
+}
+
+.sidebar img {
+    width: 100px; /* Adjust the size as needed */
+    display: block;
+    margin: 0 auto 20px auto; /* Center the image and add margin */
 }
 
 .sidebar a {
     padding: 8px 8px 8px 32px;
     text-decoration: none;
     font-size: 25px;
-    color: #818181;
+    color: white;
     display: block;
     transition: 0.3s;
+    font-family: "Lato", sans-serif;
 }
 
 .sidebar a:hover {
@@ -30,10 +37,41 @@ body {
 
 .sidebar .closebtn {
     position: absolute;
-    top: 0;
+    top: 30px;
     right: 25px;
-    font-size: 36px;
+    font-size: 25px;
     margin-left: 50px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    text-align: center;
+    background-color: black;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+.sidebar .closebtn:hover {
+    background-color: rgb(117, 1, 1);
+    color: black;
+}
+
+.sidebar .logout-container {
+    display: flex;
+    align-items: center;
+    padding: 8px 8px 8px 32px;
+    font-size: 25px;
+    color: white;
+    transition: 0.3s;
+    font-family: "Lato", sans-serif;
+}
+
+.sidebar .logout-container i {
+    font-size: 40px; /* Increase the size of the icon */
+    margin-right: 10px; /* Space between icon and text */
+}
+
+.sidebar .logout-container:hover {
+    color: #f1f1f1;
 }
 
 #main {
@@ -45,11 +83,18 @@ body {
     font-size: 20px;
     cursor: pointer;
     background-color: #111;
+    border-radius: 100px;
     color: white;
     padding: 10px 15px;
     border: none;
+    transition: opacity 0.5s ease;
 }
 
 .openbtn:hover {
     background-color: #444;
+}
+
+.hidden {
+    opacity: 0; 
+    pointer-events: none; 
 }
