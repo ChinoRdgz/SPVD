@@ -125,8 +125,20 @@ async function mostrarClientes() {
 // ========================================================================================================
 document.addEventListener("DOMContentLoaded", function () {
     showSection('dashboard');
+    obtenerNumeroClientes();
 });
 
+async function obtenerNumeroClientes() {
+    try {
+        const querySnapshot = await getDocs(collection(db, "Clientes"));
+        const numeroClientes = querySnapshot.size; // Contar la cantidad de documentos
+        console.log("Número de clientes en la base de datos:", numeroClientes);
+        // Mostrar el número de clientes en el HTML
+        document.getElementById("numero-clientes").textContent = `${numeroClientes}`;
+    } catch (error) {
+        console.error("Error al obtener el número de clientes:", error);
+    }
+}
 
 function openNav() {
     document.getElementById("sidebar").style.width = "250px";
