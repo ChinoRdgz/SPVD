@@ -127,32 +127,28 @@ document.addEventListener("DOMContentLoaded", function () {
     showSection('dashboard');
 });
 
-/ Función para abrir el menú lateral
+
 function openNav() {
     document.getElementById("sidebar").style.width = "250px";
     document.body.classList.add("darkened"); // Add darkened background
 }
 
-// Función para cerrar el menú lateral
 function closeNav() {
     document.getElementById("sidebar").style.width = "0";
     document.body.classList.remove("darkened"); // Remove darkened background
 }
 
-// Función para cambiar entre secciones
 function showSection(sectionId) {
-    // Ocultar todas las secciones
+
     document.querySelectorAll(".home-section").forEach(section => {
         section.style.display = "none";
     });
 
-    // Mostrar la sección activa
     const activeSection = document.getElementById(sectionId);
     if (activeSection) {
         activeSection.style.display = "block";
     }
 
-    // Cerrar el sidebar automáticamente
     closeNav();
 }
 
