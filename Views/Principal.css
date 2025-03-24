@@ -1,5 +1,10 @@
 body {
-    font-family: "Lato", sans-serif;
+    font-family: "Roboto", "Helvetica Neue", "Arial", sans-serif;
+}
+
+body.darkened {
+    background-color: rgba(0, 0, 0, 0.5); 
+    transition: background-color 0.5s ease;
 }
 
 .sidebar {
@@ -16,9 +21,9 @@ body {
 }
 
 .sidebar img {
-    width: 100px; /* Adjust the size as needed */
+    width: 100px;
     display: block;
-    margin: 0 auto 20px auto; /* Center the image and add margin */
+    margin: 0 auto 20px auto;
 }
 
 .sidebar a {
@@ -28,7 +33,7 @@ body {
     color: white;
     display: block;
     transition: 0.3s;
-    font-family: "Lato", sans-serif;
+    font-family: "Arial", sans-serif;
 }
 
 .sidebar a:hover {
@@ -63,6 +68,9 @@ body {
     color: white;
     transition: 0.3s;
     font-family: "Lato", sans-serif;
+    position: absolute;
+    bottom: 60px; /* Position at the bottom */
+    width: 100%; /* Ensure it spans the width of the sidebar */
 }
 
 .sidebar .logout-container i {
@@ -97,4 +105,27 @@ body {
 .hidden {
     opacity: 0; 
     pointer-events: none; 
+}
+
+.cards-container {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+}
+
+.card {
+    background-color: #f1f1f1;
+    border-radius: 10px;
+    padding: 20px;
+    width: 22%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.card h3 {
+    margin-bottom: 10px;
+}
+
+.card p {
+    color: #333;
 }

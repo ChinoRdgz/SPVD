@@ -6,6 +6,9 @@
     <title>Document</title>
     <link rel="stylesheet" href="/SPVD/Views/Principal.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+    
 </head>
 <body>
 
@@ -16,10 +19,22 @@
             <i class='bx bxs-dashboard'></i>
             <span>Dashboard</span>
         </a>
-        <a href="#" onclick="showSection('monitoreo')">Monitoreo</a>
-        <a href="#" onclick="showSection('registros')">Registros</a>
-        <a href="#" onclick="showSection('clientes')">Clientes</a>
-        <a href="#" onclick="showSection('sepalacola')">SEPALACOLA</a>
+        <a href="#" onclick="showSection('monitoreo')">
+            <i class='bx bxs-error'></i>
+            <span>Monitoreo</span>
+        </a>
+        <a href="#" onclick="showSection('registros')">
+            <i class='bx bxs-folder-open'></i>
+            <span>Registros</span>
+        </a>
+        <a href="#" onclick="showSection('clientes')">
+            <i class='bx bx-user'></i>
+            <span>Clientes</span>
+        </a>
+        <a href="#" onclick="showSection('Tecnicos')">
+            <i class='bx bx-dizzy'></i>
+            <span>Tecnicos</span>
+        </a>
         <a href="#" class="logout-container" onclick="window.location.href='/SPVD/Login.html'">
             <i class='bx bx-log-out-circle'></i>
             <span>Cerrar sesión</span>
@@ -27,16 +42,55 @@
         
     </div>
 
-    <div id="main">
+    <section class="home-section" id="dashboard">
         <button class="openbtn" onclick="openNav()">></button>
-        
-        <div id="contenido">
-            <p id="dashboard" class="section">Contenido del Dashboard</p>
-            <p id="monitoreo" class="section" style="display:none;">Contenido del Monitoreo</p>
-            <p id="clientes" class="section" style="display:none;">Contenido de Clientes</p>
-            <p id="sepalacola" class="section" style="display:none;">Contenido de SEPALACOLA</p>
+        <div class="cards-container">
+            <div class="card">  
+                <h3>Monitoreo</h3>
+                <p>Content for card 1</p>
+            </div>
+            <div class="card">
+                <h3>Clientes</h3>
+                <p>Content for card 2</p>
+            </div>
+            <div class="card">
+                <h3>Registros</h3>
+                <p>Content for card 3</p>
+            </div>
+            <div class="card">
+                <h3>Instalaciones</h3>
+                <p>Content for card 4</p>
+            </div>
         </div>
-    </div>
+    </section>
+    <section class="home-section" id="monitoreo" style="display:none;">
+        <button class="openbtn" onclick="openNav()">></button>
+        <h2>Monitoreo</h2>
+        <p>Contenido del Monitoreo</p>
+
+    </section>
+    <section class="home-section" id="registros" style="display:none;">
+        <button class="openbtn" onclick="openNav()">></button>
+        <h2>Registros</h2>
+        <p>Contenido de Registros</p>
+    </section>
+    <section class="home-section" id="clientes" style="display:none;">
+        <button class="openbtn" onclick="openNav()">></button>
+        <h2>Clientes</h2>
+        <p>Contenido de Clientes</p>
+    </section>
+    <section class="home-section" id="Tecnicos" style="display:none;">
+        <button class="openbtn" onclick="openNav()">></button>
+        <h2>puro ingeniero perron</h2>
+        <input type="text" id="txtNombreTec" placeholder="Nombre">
+        <input type="text" id="txtApellidoTec" placeholder="Apellido">
+        <input type="text" id="txtTelefonoTec" placeholder="Telefono">
+        <input type="text" id="txtCorreoTec" placeholder="Correo">
+        <button onclick="agregarTecnico()">Agregar</button>
+        <div id="tecnicos-container"></div>
+        <button onclick="mostrarTecnicos()">mostrar</button>
+
+    </section>
     
     <script type="module" src="/SPVD/Controllers/Principal.js" defer></script>
 </body>
