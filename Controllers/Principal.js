@@ -16,42 +16,7 @@ const db = getFirestore(app);
 
 console.log("Firebase inicializado:", app);
 console.log("Firestore conectado:", db);
-
-async function enviarDatos() {
-    let valor = document.getElementById("nombre").value;
-    if (valor.trim() !== "") {
-        try {
-            console.log("Valor a guardar:", valor);
-            await setDoc(doc(db, "Datos", "informacion"), { valor });
-            alert("¡Valor enviado a Firebase!");
-            document.getElementById("nombre").value = "";
-        } catch (error) {
-            console.error("Error al guardar:", error);
-        }
-    } else {
-        alert("El campo está vacío");
-    }
-}
-
-async function mostrarDatos() {
-    try {
-        const docRef = doc(db, "Datos", "informacion");
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-            document.getElementById("resultado").textContent = 
-                "Valor en Firebase: " + docSnap.data().valor;
-        } else {
-            console.log("No se encontró el documento.");
-            document.getElementById("resultado").textContent = 
-                "No se encontró el documento en Firebase.";
-        }
-    } catch (error) {
-        console.error("Error al obtener datos:", error);
-        document.getElementById("resultado").textContent = 
-            "Ocurrió un error al obtener los datos.";
-    }
-}
+//========================================================================================================
 
 async function agregarTecnico() {
     const nombre = document.getElementById("txtNombreTec").value;
@@ -104,7 +69,65 @@ async function mostrarTecnicos() {
     }
 }
 
-// Función para abrir el menú lateral
+// ========================================================================================================
+
+async function agregarCliente() {
+    const nombre = document.getElementById("txtNombreClient").value;
+    const apellido = document.getElementById("txtApellidoClient").value;
+    const telefono = document.getElementById("txtTelefonoClient").value;
+    const correo = document.getElementById("txtCorreoClient").value;
+
+
+    if (nombre.trim() && apellido.trim() && telefono.trim() && correo.trim()) {
+        try {
+            const docRef = await addDoc(collection(db, "Clientes"), { // ← GENERA ID AUTOMÁTICO
+                nombre,
+                apellido,
+                telefono,
+                correo
+            });
+
+            console.log("Client agregado con ID:", docRef.id);
+            alert("¡Client agregado exitosamente!");
+
+            // Limpiar los campos
+            document.getElementById("txtNombreClient").value = "";
+            document.getElementById("txtApellidoClient").value = "";
+            document.getElementById("txtTelefonoClient").value = "";
+            document.getElementById("txtCorreoClient").value = "";
+        } catch (error) {
+            console.error("Error al agregar Cliente:", error);
+            alert("Error al agregar Cliente. Revisa la consola para más detalles.");
+        }
+    } else {
+        alert("Por favor, complete todos los campos.");
+    }
+}
+
+async function mostrarClientes() {
+    const ClientContainer = document.getElementById("clientes-container");
+    ClientContainer.innerHTML = ""; // Clear previous content
+
+    try {
+        const querySnapshot = await getDocs(collection(db, "Clientes"));
+        querySnapshot.forEach((doc) => {
+            const Client = doc.data();
+            const ClientDiv = document.createElement("div");
+            ClientDiv.textContent = `${Client.nombre} ${Client.apellido} - ${Client.telefono} - ${Client.correo}`;
+            ClientContainer.appendChild(ClientDiv);
+        });
+    } catch (error) {
+        console.error("Error al obtener Client:", error);
+        alert("Error al obtener Client. Por favor, inténtelo de nuevo.");
+    }
+}
+
+// ========================================================================================================
+document.addEventListener("DOMContentLoaded", function () {
+    showSection('dashboard');
+});
+
+/ Función para abrir el menú lateral
 function openNav() {
     document.getElementById("sidebar").style.width = "250px";
     document.body.classList.add("darkened"); // Add darkened background
@@ -133,17 +156,13 @@ function showSection(sectionId) {
     closeNav();
 }
 
-
-// Mostrar la sección "dashboard" al cargar la página
-document.addEventListener("DOMContentLoaded", function () {
-    showSection('dashboard');
-});
-
 // Asignar las funciones al objeto global para que funcionen en el HTML
 window.openNav = openNav;
 window.closeNav = closeNav;
 window.showSection = showSection;
 window.agregarTecnico = agregarTecnico;
 window.mostrarTecnicos = mostrarTecnicos;
+window.agregarCliente = agregarCliente;
+window.mostrarClientes = mostrarClientes;
 
 

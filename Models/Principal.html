@@ -11,7 +11,6 @@
     
 </head>
 <body>
-
     <div id="sidebar" class="sidebar">
         <button class="closebtn" onclick="closeNav()">x</button>
         <img src="/SPVD/Images/VanguardiaDigital.png" alt="">
@@ -63,22 +62,35 @@
             </div>
         </div>
     </section>
+
+
     <section class="home-section" id="monitoreo" style="display:none;">
         <button class="openbtn" onclick="openNav()">></button>
         <h2>Monitoreo</h2>
-        <p>Contenido del Monitoreo</p>
+        <p>Registro de datos monitoreo y rutinas de vigilancia tiempo real </p>
 
     </section>
+    <!-- ------------------------------------------------------------------- -->
     <section class="home-section" id="registros" style="display:none;">
         <button class="openbtn" onclick="openNav()">></button>
-        <h2>Registros</h2>
-        <p>Contenido de Registros</p>
+        <h2>Registro de instalaciones y/o servicios-mantenimiento </h2>
+        <p>INSTALACIONES</p>
+
+        <p>SERVICIOS</p>
     </section>
+    <!-- ------------------------------------------------------------------- -->
     <section class="home-section" id="clientes" style="display:none;">
         <button class="openbtn" onclick="openNav()">></button>
         <h2>Clientes</h2>
-        <p>Contenido de Clientes</p>
+        <input type="text" id="txtNombreClient" placeholder="Nombre">
+        <input type="text" id="txtApellidoClient" placeholder="Apellido">
+        <input type="text" id="txtTelefonoClient" placeholder="Telefono">
+        <input type="text" id="txtCorreoClient" placeholder="Correo">
+        <button onclick="agregarCliente()">Agregar</button>
+        <div id="clientes-container"></div>
+        <button onclick="mostrarClientes()">mostrar</button>
     </section>
+    <!-- ------------------------------------------------------------------- -->
     <section class="home-section" id="Tecnicos" style="display:none;">
         <button class="openbtn" onclick="openNav()">></button>
         <h2>puro ingeniero perron</h2>
@@ -91,7 +103,7 @@
         <button onclick="mostrarTecnicos()">mostrar</button>
 
     </section>
-    
+    <!-- ------------------------------------------------------------------- -->
     <script type="module" src="/SPVD/Controllers/Principal.js" defer></script>
 </body>
 </html>
