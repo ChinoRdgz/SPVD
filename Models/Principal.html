@@ -7,24 +7,16 @@
     <link rel="stylesheet" href="/Views/Principal.css">    
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-
-    
 </head>
 <body>
+    
     <div id="sidebar" class="sidebar">
         <button class="closebtn" onclick="closeNav()">x</button>
         <img src="/Images/VanguardiaDigital.png" alt="">
+
         <a href="#" onclick="showSection('dashboard')">
             <i class='bx bxs-dashboard'></i>
             <span>Dashboard</span>
-        </a>
-        <a href="#" onclick="showSection('monitoreo')">
-            <i class='bx bxs-error'></i>
-            <span>Monitoreo</span>
-        </a>
-        <a href="#" onclick="showSection('registros')">
-            <i class='bx bxs-folder-open'></i>
-            <span>Registros</span>
         </a>
         <a href="#" onclick="showSection('clientes')">
             <i class='bx bx-user'></i>
@@ -34,103 +26,293 @@
             <i class='bx bx-dizzy'></i>
             <span>Tecnicos</span>
         </a>
-        <a href="#" class="logout-container" onclick="window.location.href='/SPVD/index.html'">
+        <a href="#" onclick="showSection('Reportes')">
+            <i class='bx bxs-folder-open'></i>
+            <span>Reportes</span>
+        </a>
+        <a href="#" onclick="showSection('Bitacora')">
+            <i class='bx bx-dizzy'></i>
+            <span>Bitacora</span>
+        </a>
+        
+        
+        <a href="#" class="logout-container" onclick="window.location.href='/index.html'">
             <i class='bx bx-log-out-circle'></i>
             <span>Cerrar sesión</span>
         </a>
-        
     </div>
+    
 
     <section class="home-section" id="dashboard">
+        <div class="top-bar">
+            <h1>Dashboard</h1>
+        </div>
         <button class="openbtn" onclick="openNav()">></button>
         <div class="cards-container">
             <div class="card">  
-                <h3>Monitoreo</h3>
-                <p>rellenar</p>
+                <h3>Tecnicos</h3>
+                <p id="numero-tecnicos">0</p>
             </div>
             <div class="card">
                 <h3>Clientes</h3>
-                <p id="numero-clientes"></p>
-
+                <p id="numero-clientes">0</p>
             </div>
             <div class="card">
-                <h3>Registros</h3>
-                <p>rellenar</p>
+                <h3>Reportes</h3>
+                <p id="numero-reportes">0</p>
             </div>
             <div class="card">
-                <h3>Instalaciones</h3>
-                <p>rellenar</p>
+                <h3>Tareas pendientes</h3>
+                <p id="numero-pendientes">0</p>
             </div>
         </div>
+        <img src="/Images/imagen 2.png" alt="">
     </section>
 
 
-    <section class="home-section" id="monitoreo" style="display:none;">
-        <button class="openbtn" onclick="openNav()">></button>
-        <h2>Monitoreo</h2>
-        <p>Registro de datos monitoreo y rutinas de vigilancia tiempo real </p>
+<!--  =====================================================================================================-->
 
-    </section>
-    <!-- ------------------------------------------------------------------- -->
-    <section class="home-section" id="registros" style="display:none;">
-        <button class="openbtn" onclick="openNav()">></button>
-        <h2>Registro de instalaciones y/o servicios-mantenimiento </h2>
-        <p>INSTALACIONES</p>
-
-        <p>SERVICIOS</p>
-    </section>
-    <!-- ------------------------------------------------------------------- -->
     <section class="home-section" id="clientes" style="display:none;">
         <button class="openbtn" onclick="openNav()">></button>
-        <h2>Clientes</h2>
-        <input type="text" id="txtNombreClient" placeholder="Nombre">
-        <input type="text" id="txtApellidoClient" placeholder="Apellido">
-        <input type="text" id="txtTelefonoClient" placeholder="Telefono">
-        <input type="text" id="txtCorreoClient" placeholder="Correo">
-        <button onclick="agregarCliente()">Agregar</button>
-        <div id="clientes-container"></div>
-        <button onclick="mostrarClientes()">mostrar</button>
+        <br>
+        <br>
+        <h2 class="clientes-title">Clientes</h2>
+
+        <div class="clientes-header">
+            <input type="text" class="clientes-search" id="searchCliente" placeholder="Buscar Cliente" oninput="filtrarClientes()">
+            <button class="clientes-btn" onclick="abrirModalCliente()">Añadir Cliente</button>
+        </div>  
+
+        <div class="modal" id="modalCliente">
+            <div class="modal-content">
+                <span class="close" onclick="cerrarModalCliente()">&times;</span>
+                <h3>Nuevo Cliente</h3>
+                <input type="text" class="clientes-input" id="txtNombreCliente" placeholder="Nombre del Cliente">
+                <input type="text" class="clientes-input" id="txtTelefonoCliente" placeholder="Teléfono">
+                <input type="email" class="clientes-input" id="txtCorreoCliente" placeholder="Correo">
+                <input type="text" class="clientes-input" id="txtDireccionCliente" placeholder="Dirección">
+                <div class="clientes-form-buttons">
+                    <button class="clientes-btn" onclick="agregarCliente()">Guardar</button>
+                    <button class="clientes-cancel-btn" onclick="cerrarModalCliente()">Cancelar</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="modalEditarCliente">
+            <div class="modal-content">
+                <span class="close" onclick="cerrarModalEditarCliente()">&times;</span>
+                <h3>Editar Cliente</h3>
+                <input type="text" class="clientes-input" id="editNombreCliente" placeholder="Nombre del Cliente">
+                <input type="text" class="clientes-input" id="editTelefonoCliente" placeholder="Teléfono">
+                <input type="email" class="clientes-input" id="editCorreoCliente" placeholder="Correo">
+                <input type="text" class="clientes-input" id="editDireccionCliente" placeholder="Dirección">
+                <div class="clientes-form-buttons">
+                    <button class="clientes-btn" id="btnGuardarEdicionCliente" onclick="">Guardar</button>
+                    <button class="clientes-cancel-btn" onclick="cerrarModalEditarCliente()">Cancelar</button>
+                </div>
+            </div>
+        </div>
+
+        <table class="clientes-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Teléfono</th>
+                    <th>Correo</th>
+                    <th>Dirección</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="clientes-container"></tbody>
+        </table>
     </section>
-    <!-- ------------------------------------------------------------------- -->
+<!--  =====================================================================================================-->
     <section class="home-section" id="Tecnicos" style="display:none;">
+        <button class="openbtn" onclick="openNav()">></button>
+        <br>
+        <br>
         <h2 class="tecnicos-title">Técnicos</h2>
 
-    <!-- Botón para abrir formulario -->
-    <button class="tecnicos-btn" onclick="mostrarFormulario()">Añadir Técnico</button>
+        <div class="tecnicos-header">
+            <input type="text" class="tecnicos-search" id="searchTecnico" placeholder="Buscar Técnico">
+            <button class="tecnicos-btn" onclick="abrirModal()">Añadir Técnico</button>
+        </div>  
 
-    <!-- Formulario oculto -->
-    <div class="tecnicos-form-container" id="formularioTecnico">
-        <h3>Nuevo Técnico</h3>
-        <input type="text" class="tecnicos-input" id="txtNombreTec" placeholder="Nombre del Técnico">
-        <input type="email" class="tecnicos-input" id="txtCorreoTec" placeholder="Correo">
-        <input type="text" class="tecnicos-input" id="txtTelefonoTec" placeholder="Teléfono">
-        <input type="text" class="tecnicos-input" id="txtDireccionTec" placeholder="Dirección">
-        <input type="text" class="tecnicos-input" id="txtEspecialidadTec" placeholder="Tipo de Instalación">
-        
-        <div class="tecnicos-form-buttons">
-            <button class="tecnicos-btn" onclick="agregarTecnico()">Guardar</button>
-            <button class="tecnicos-cancel-btn" onclick="ocultarFormulario()">Cancelar</button>
+        <div class="modal" id="modalTecnico">
+            <div class="modal-content">
+                <span class="close" onclick="cerrarModal()">&times;</span>
+                <h3>Nuevo Técnico</h3>
+                <input type="text" class="tecnicos-input" id="txtNombreTec" placeholder="Nombre del Técnico">
+                <input type="email" class="tecnicos-input" id="txtCorreoTec" placeholder="Correo">
+                <input type="text" class="tecnicos-input" id="txtTelefonoTec" placeholder="Teléfono">
+                <input type="text" class="tecnicos-input" id="txtDireccionTec" placeholder="Dirección">
+                <input type="text" class="tecnicos-input" id="txtEspecialidadTec" placeholder="Tipo de Instalación">
+                <div class="tecnicos-form-buttons">
+                    <button class="tecnicos-btn" onclick="agregarTecnico()">Guardar</button>
+                    <button class="tecnicos-cancel-btn" onclick="cerrarModal()">Cancelar</button>
+                </div>
+            </div>
         </div>
+
+        <div class="modal" id="modalEditarTecnico">
+            <div class="modal-content">
+                <span class="close" onclick="cerrarModalEditar()">&times;</span>
+                <h3>Editar Técnico</h3>
+                <input type="text" class="tecnicos-input" id="editNombreTec" placeholder="Nombre del Técnico">
+                <input type="email" class="tecnicos-input" id="editCorreoTec" placeholder="Correo">
+                <input type="text" class="tecnicos-input" id="editTelefonoTec" placeholder="Teléfono">
+                <input type="text" class="tecnicos-input" id="editDireccionTec" placeholder="Dirección">
+                <input type="text" class="tecnicos-input" id="editEspecialidadTec" placeholder="Tipo de Instalación">
+                <div class="tecnicos-form-buttons">
+                    <button class="tecnicos-btn" id="btnGuardarEdicion" onclick="">Guardar</button>
+                    <button class="tecnicos-cancel-btn" onclick="cerrarModalEditar()">Cancelar</button>
+                </div>
+            </div>
+        </div>
+
+        <table class="tecnicos-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre Técnico</th>
+                    <th>Correo</th>
+                    <th>Teléfono</th>
+                    <th>Dirección</th>
+                    <th>Tipo de Instalación</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tecnicos-container"></tbody>
+        </table>
+    </section>
+<!--  =====================================================================================================-->
+<section class="home-section" id="registros" style="display:none;">
+    <button class="openbtn" onclick="openNav()">></button>
+    <h2>Registro de instalaciones y/o servicios-mantenimiento </h2>
+    <p>INSTALACIONES</p>
+    <p>SERVICIOS</p>
+</section>
+<!--  =====================================================================================================-->
+<section class="home-section" id="Reportes" style="display:none;">
+    <button class="openbtn" onclick="openNav()">></button>
+    <h2 class="repote-title">Reportes</h2>
+
+    <div class="reportes-header">
+        <input type="text" class="reportes-search" id="searchReporte" placeholder="Buscar Reporte">
+        <button class="reportes-btn" onclick="abrirModalReporte()">Añadir Reporte</button>
     </div>
 
-    <!-- Tabla de Técnicos -->
-    <table class="tecnicos-table">
+    <table class="reportes-table">
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Nombre Técnico</th>
-                <th>Correo</th>
+                <th>Reporte</th>
+                <th>Cliente</th>
                 <th>Teléfono</th>
                 <th>Dirección</th>
-                <th>Tipo de Instalación</th>
+                <th>Técnico</th>
+                <th>Fecha Inicio</th>
+                <th>Fecha Final</th>
+                <th>Proceso</th>
                 <th>Acciones</th>
             </tr>
         </thead>
-        <tbody id="tecnicos-container"></tbody>
+        <tbody id="reportes-container">
+        </tbody>
     </table>
 
-    </section>
-    <!-- ------------------------------------------------------------------- -->
+    <div class="modal" id="modalReporte">
+        <div class="modal-content">
+            <span class="close" onclick="cerrarModalReporte()">&times;</span>
+            <h3>Añadir Reporte</h3>
+            <div class="modal-columns">
+                <div>
+                    <h4>Datos del Cliente</h4>
+                    <label>Nombre del Cliente</label>
+                    <select id="selectCliente" class="reportes-input"></select>
+                    <label>Teléfono</label>
+                    <input type="text" id="txtTelefonoCliente" class="reportes-input">
+                    <label>Dirección</label>
+                    <input type="text" id="txtDireccionCliente" class="reportes-input">
+                </div>
+                <div>
+                    <h4>Datos del Técnico</h4>
+                    <label>Nombre del Técnico</label>
+                    <select id="selectTecnico" class="reportes-input"></select>
+                    <label>Tipo de Instalación</label>
+                    <select id="selectTipoInstalacion" class="reportes-input">
+                        <option value="Instalación">Instalación</option>
+                        <option value="Mantenimiento">Mantenimiento</option>
+                    </select>
+                    <label>Fecha de Inicio</label>
+                    <input type="date" id="txtFechaInicio" class="reportes-input">
+                    <label>Fecha de Término</label>
+                    <input type="date" id="txtFechaTermino" class="reportes-input">
+                    <label>Observaciones</label>
+                    <textarea id="txtObservaciones" class="reportes-input"></textarea>
+                </div>
+            </div>
+            <button class="tecnicos-btn" onclick="guardarReporte()">Guardar Reporte</button>
+        </div>
+    </div>
+
+    <div class="modal" id="modalEditarReporte" data-report-id="">
+        <div class="modal-content">
+            <span class="close" onclick="cerrarModalEditarReporte()">&times;</span>
+            <h3>Editar Reporte</h3>
+            <div class="modal-columns">
+                <div>
+                    <h4>Datos del Cliente</h4>
+                    <label>Nombre del Cliente</label>
+                    <select id="editSelectCliente" class="reportes-input"></select>
+                    <label>Teléfono</label>
+                    <input type="text" id="editTxtTelefonoCliente" class="reportes-input" >
+                    <label>Dirección</label>
+                    <input type="text" id="editTxtDireccionCliente" class="reportes-input" >
+                </div>
+                <div>
+                    <h4>Datos del Técnico</h4>
+                    <label>Nombre del Técnico</label>
+                    <select id="editSelectTecnico" class="reportes-input"></select>
+                    <label>Tipo de Instalación</label>
+                    <select id="editSelectTipoInstalacion" class="reportes-input">
+                        <option value="Instalación">Instalación</option>
+                        <option value="Mantenimiento">Mantenimiento</option>
+                    </select>
+                    <label>Fecha de Inicio</label>
+                    <input type="date" id="editTxtFechaInicio" class="reportes-input">
+                    <label>Fecha de Término</label>
+                    <input type="date" id="editTxtFechaTermino" class="reportes-input">
+                    <label>Observaciones</label>
+                    <textarea id="editTxtObservaciones" class="reportes-input"></textarea>
+                </div>
+            </div>
+            <div class="reportes-form-buttons">
+                <button class="reportes-btn" onclick="guardarEdicionReporte()">Guardar Cambios</button>
+                <button class="reportes-cancel-btn" onclick="cerrarModalEditarReporte()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!--  =====================================================================================================-->
+<section class="home-section" id="Bitacora" style="display:none;">
+
+    <button class="openbtn" onclick="openNav()">></button>
+    <h2 class="bitacora-title">Bitácora</h2>
+    <table class="bitacora-table">
+        <thead>
+            <tr>
+                <th>Acción</th>
+                <th>Fecha</th>
+            </tr>
+        </thead>
+        <tbody id="bitacora-container"></tbody>
+    </table>
+</section>
+
     <script type="module" src="/Controllers/Principal.js" defer></script>
 </body>
 </html>

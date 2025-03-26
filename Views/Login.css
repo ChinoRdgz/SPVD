@@ -55,15 +55,15 @@ button {
     cursor: pointer;
 }
 #forgot {
-    color: black;
-    opacity: 0.5;
+    color: #ffffff; /* Improved contrast for better accessibility */
+    opacity: 0.8;
     background-color: transparent;
     text-decoration: underline;
 }
 
 .right-panel {
     width: 50%;
-    background: url('/SPVD/Images/fondo1.jpg') no-repeat center center;
+    background: url('/Images/fondo1.jpg') no-repeat center center;
     background-size: cover;
     border-left: 3px solid #1E1E1E;
 }

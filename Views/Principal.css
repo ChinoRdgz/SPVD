@@ -1,6 +1,5 @@
 body {
     font-family: "Roboto", "Helvetica Neue", "Arial", sans-serif;
-    font-family: Arial, sans-serif;
     background-color: #f2f5fa;
     margin: 0;
     padding: 20px;
@@ -100,6 +99,11 @@ body.darkened {
     padding: 10px 15px;
     border: none;
     transition: opacity 0.5s ease;
+    display: block;
+    position: fixed; /* Fija el botón en la esquina superior izquierda */
+    top: 20px; /* Ajusta la posición vertical */
+    left: 20px; /* Ajusta la posición horizontal */
+    z-index: 1001; /* Asegúrate de que esté por encima de otros elementos */
 }
 
 .openbtn:hover {
@@ -137,6 +141,7 @@ body.darkened {
 
 /* Sección de Técnicos */
 .tecnicos-section {
+    top: 100px;
     background: white;
     padding: 20px;
     border-radius: 10px;
@@ -146,30 +151,48 @@ body.darkened {
 /* Título */
 .tecnicos-title {
     margin-bottom: 15px;
+    margin-left: 43%;
 }
 
 /* Botón principal */
-.tecnicos-btn {
-    background-color: #3b82f6;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-}
+    .tecnicos-btn {
+        background-color: #3b82f6;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
 
 .tecnicos-btn:hover {
     background-color: #2563eb;
 }
 
-/* Formulario oculto */
+/* Formulario flotante */
 .tecnicos-form-container {
     display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     background: #ffffff;
-    padding: 15px;
-    margin-top: 10px;
+    padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    width: 400px;
+    max-width: 90%;
+}
+
+.tecnicos-form-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
 }
 
 .tecnicos-input {
@@ -240,4 +263,553 @@ body.darkened {
 
 .tecnicos-delete-btn:hover {
     color: #ef4444;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 5% auto; /* Reduce the top margin for better centering */
+    padding: 30px; /* Increase padding for better spacing */
+    border-radius: 10px; /* Slightly larger border radius */
+    width: 600px; /* Increase width */
+    max-width: 90%; /* Ensure it remains responsive */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.modal-content .close:hover,
+.modal-content .close:focus {
+    color: black;
+    text-decoration: none;
+}
+
+.tecnicos-header {
+    display: flex;
+    justify-content: flex-end; /* Alinear al lado derecho */
+    align-items: center;
+    gap: 10px; /* Espacio entre la barra de búsqueda y el botón */
+    margin-bottom: 15px;
+}
+
+.tecnicos-search {
+    width: 200px; /* Tamaño más pequeño */
+    padding: 5px; /* Reducir el padding */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px; /* Tamaño de texto más pequeño */
+}
+
+#modalEditarTecnico {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+#modalEditarTecnico .modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    max-width: 90%;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+#modalEditarTecnico .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#modalEditarTecnico .close:hover,
+#modalEditarTecnico .close:focus {
+    color: black;
+    text-decoration: none;
+}
+
+/* Clientes Section */
+.clientes-title {
+    margin-bottom: 15px;
+    margin-left: 43%;
+}
+
+.clientes-header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.clientes-search {
+    width: 200px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.clientes-btn {
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.clientes-btn:hover {
+    background-color: #2563eb;
+}
+
+.clientes-cancel-btn {
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.clientes-cancel-btn:hover {
+    background-color: #dc2626;
+}
+
+.clientes-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 15px;
+}
+
+.clientes-table th, .clientes-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+.clientes-table th {
+    background-color: #3b82f6;
+    color: white;
+}
+
+.clientes-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.clientes-edit-btn, .clientes-delete-btn {
+    cursor: pointer;
+    padding: 5px 8px;
+    border: none;
+    border-radius: 5px;
+    background-color: transparent;
+}
+
+.clientes-edit-btn:hover {
+    color: #facc15;
+}
+
+.clientes-delete-btn:hover {
+    color: #ef4444;
+}
+
+/* Modal for Clientes */
+#modalCliente {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+#modalCliente .modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    max-width: 90%;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+#modalCliente .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#modalCliente .close:hover,
+#modalCliente .close:focus {
+    color: black;
+    text-decoration: none;
+}
+
+.clientes-input {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.clientes-form-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.clientes-btn {
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.clientes-btn:hover {
+    background-color: #2563eb;
+}
+
+.clientes-cancel-btn {
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.clientes-cancel-btn:hover {
+    background-color: #dc2626;
+}
+
+/* Modal for Editar Cliente */
+#modalEditarCliente {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+#modalEditarCliente .modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    max-width: 90%;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+#modalEditarCliente .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#modalEditarCliente .close:hover,
+#modalEditarCliente .close:focus {
+    color: black;
+    text-decoration: none;
+}
+
+#modalEditarCliente .clientes-input {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+#modalEditarCliente .clientes-form-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+#modalEditarCliente .clientes-btn {
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#modalEditarCliente .clientes-btn:hover {
+    background-color: #2563eb;
+}
+
+#modalEditarCliente .clientes-cancel-btn {
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#modalEditarCliente .clientes-cancel-btn:hover {
+    background-color: #dc2626;
+}
+
+.reporte-title{
+    margin-bottom: 15px;
+    margin-left: 43%;
+}
+
+/* Reportes Section */
+.reportes-header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 15px;
+}
+
+.reportes-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between the input and button */
+}
+
+.reportes-search {
+    width: 250px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.reportes-btn {
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.reportes-btn:hover {
+    background-color: #2563eb;
+}
+
+.reportes-cancel-btn {
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.reportes-cancel-btn:hover {
+    background-color: #dc2626;
+}
+
+.reportes-input {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.modal-columns {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.modal-columns div {
+    width: 48%;
+}
+
+/* General Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+table th, table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    background-color: #3b82f6;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 14px;
+}
+
+table tr:hover {
+    background-color: #f1f5f9;
+}
+
+table td {
+    font-size: 14px;
+    color: #333;
+}
+
+table td a {
+    color: #3b82f6;
+    text-decoration: none;
+}
+
+table td a:hover {
+    text-decoration: underline;
+}
+
+/* Action Buttons in Tables */
+.table-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.table-actions i {
+    cursor: pointer;
+    font-size: 18px;
+    padding: 5px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.table-actions .edit-btn {
+    color: #facc15;
+}
+
+.table-actions .edit-btn:hover {
+    background-color: #fef3c7;
+}
+
+.table-actions .delete-btn {
+    color: #ef4444;
+}
+
+.table-actions .delete-btn:hover {
+    background-color: #fee2e2;
+}
+
+/* Responsive Table */
+@media (max-width: 768px) {
+    table {
+        font-size: 12px;
+    }
+
+    table th, table td {
+        padding: 10px;
+    }
+
+    .table-actions i {
+        font-size: 16px;
+    }
+}
+
+#modalReporte .modal-content {
+    background-color: #fff;
+    margin: 5% auto; /* Reduce the top margin for better centering */
+    padding: 30px; /* Increase padding for better spacing */
+    border-radius: 10px; /* Slightly larger border radius */
+    width: 800px; /* Increase width */
+    max-width: 95%; /* Ensure it remains responsive */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Bitacora Section */
+.bitacora-title {
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.bitacora-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 15px;
+}
+
+.bitacora-table th, .bitacora-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+.bitacora-table th {
+    background-color: #3b82f6;
+    color: white;
+}
+
+.bitacora-table tr:hover {
+    background-color: #f1f5f9;
+}
+
+/* Top Bar */
+.top-bar {
+    background-color: #3b82f6;
+    color: white;
+    padding: 15px 20px;
+    text-align: center;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.top-bar h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
 }
