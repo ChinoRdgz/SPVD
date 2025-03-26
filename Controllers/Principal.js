@@ -17,57 +17,142 @@ const db = getFirestore(app);
 console.log("Firebase inicializado:", app);
 console.log("Firestore conectado:", db);
 //========================================================================================================
-
-async function agregarTecnico() {
-    const nombre = document.getElementById("txtNombreTec").value;
-    const apellido = document.getElementById("txtApellidoTec").value;
-    const telefono = document.getElementById("txtTelefonoTec").value;
-    const correo = document.getElementById("txtCorreoTec").value;
-
-
-    if (nombre.trim() && apellido.trim() && telefono.trim() && correo.trim()) {
-        try {
-            const docRef = await addDoc(collection(db, "Tecnicos"), { // ← GENERA ID AUTOMÁTICO
-                nombre,
-                apellido,
-                telefono,
-                correo
-            });
-
-            console.log("Técnico agregado con ID:", docRef.id);
-            alert("¡Técnico agregado exitosamente!");
-
-            // Limpiar los campos
-            document.getElementById("txtNombreTec").value = "";
-            document.getElementById("txtApellidoTec").value = "";
-            document.getElementById("txtTelefonoTec").value = "";
-            document.getElementById("txtCorreoTec").value = "";
-        } catch (error) {
-            console.error("Error al agregar técnico:", error);
-            alert("Error al agregar técnico. Revisa la consola para más detalles.");
-        }
-    } else {
-        alert("Por favor, complete todos los campos.");
-    }
+// Mostrar el formulario
+function mostrarFormulario() {
+    document.getElementById("formularioTecnico").style.display = "block";
 }
 
-async function mostrarTecnicos() {
-    const tecnicosContainer = document.getElementById("tecnicos-container");
-    tecnicosContainer.innerHTML = ""; // Clear previous content
+// Ocultar el formulario y limpiar campos
+function ocultarFormulario() {
+    document.getElementById("formularioTecnico").style.display = "none";
+    limpiarCampos();
+}
 
-    try {
-        const querySnapshot = await getDocs(collection(db, "Tecnicos"));
-        querySnapshot.forEach((doc) => {
-            const tecnico = doc.data();
-            const tecnicoDiv = document.createElement("div");
-            tecnicoDiv.textContent = `${tecnico.nombre} ${tecnico.apellido} - ${tecnico.telefono} - ${tecnico.correo}`;
-            tecnicosContainer.appendChild(tecnicoDiv);
+// Agregar técnico a Firestore
+function agregarTecnico() {
+    let nombre = document.getElementById("txtNombreTec").value;
+    let correo = document.getElementById("txtCorreoTec").value;
+    let telefono = document.getElementById("txtTelefonoTec").value;
+    let direccion = document.getElementById("txtDireccionTec").value;
+    let especialidad = document.getElementById("txtEspecialidadTec").value;
+
+    if (!nombre || !correo || !telefono || !direccion || !especialidad) {
+        alert("Por favor, llena todos los campos.");
+        return;
+    }
+
+    db.collection("tecnicos").add({
+        nombre: nombre,
+        correo: correo,
+        telefono: telefono,
+        direccion: direccion,
+        especialidad: especialidad
+    }).then(() => {
+        console.log("Técnico agregado correctamente.");
+        mostrarTecnicos(); 
+        ocultarFormulario();
+    }).catch(error => {
+        console.error("Error al agregar técnico: ", error);
+    });
+}
+
+// Mostrar técnicos desde Firestore
+function mostrarTecnicos() {
+    let tbody = document.getElementById("tecnicos-container");
+    tbody.innerHTML = "";
+
+    db.collection("Tecnicos").get().then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+            let tec = doc.data();
+            let fila = `<tr>
+                <td>${doc.id}</td>
+                <td>${tec.nombre}</td>
+                <td><a href="mailto:${tec.correo}">${tec.correo}</a></td>
+                <td>${tec.telefono}</td>
+                <td>${tec.direccion}</td>
+                <td>${tec.especialidad}</td>
+                <td class="tecnicos-actions">
+                    <button class="tecnicos-edit-btn" onclick="editarTecnico('${doc.id}')"><i class="fas fa-edit"></i></button>
+                    <button class="tecnicos-delete-btn" onclick="eliminarTecnico('${doc.id}')"><i class="fas fa-trash"></i></button>
+                </td>
+            </tr>`;
+            tbody.innerHTML += fila;
         });
-    } catch (error) {
-        console.error("Error al obtener técnicos:", error);
-        alert("Error al obtener técnicos. Por favor, inténtelo de nuevo.");
-    }
+    }).catch(error => {
+        console.error("Error al obtener técnicos: ", error);
+    });
 }
+
+// Eliminar técnico de Firestore
+function eliminarTecnico(id) {
+    db.collection("Tecnicos").doc(id).delete().then(() => {
+        console.log("Técnico eliminado correctamente.");
+        mostrarTecnicos();
+    }).catch(error => {
+        console.error("Error al eliminar técnico: ", error);
+    });
+}
+
+// Editar técnico (muestra los datos en los inputs)
+function editarTecnico(id) {
+    let docRef = db.collection("tecnicos").doc(id);
+
+    docRef.get().then(doc => {
+        if (doc.exists) {
+            let tec = doc.data();
+            document.getElementById("txtNombreTec").value = tec.nombre;
+            document.getElementById("txtCorreoTec").value = tec.correo;
+            document.getElementById("txtTelefonoTec").value = tec.telefono;
+            document.getElementById("txtDireccionTec").value = tec.direccion;
+            document.getElementById("txtEspecialidadTec").value = tec.especialidad;
+
+            mostrarFormulario();
+
+            document.querySelector(".tecnicos-btn").setAttribute("onclick", `actualizarTecnico('${id}')`);
+        } else {
+            console.log("No se encontró el técnico.");
+        }
+    }).catch(error => {
+        console.error("Error al obtener técnico: ", error);
+    });
+}
+
+// Actualizar técnico en Firestore
+function actualizarTecnico(id) {
+    let nombre = document.getElementById("txtNombreTec").value;
+    let correo = document.getElementById("txtCorreoTec").value;
+    let telefono = document.getElementById("txtTelefonoTec").value;
+    let direccion = document.getElementById("txtDireccionTec").value;
+    let especialidad = document.getElementById("txtEspecialidadTec").value;
+
+    db.collection("Tecnicos").doc(id).update({
+        nombre: nombre,
+        correo: correo,
+        telefono: telefono,
+        direccion: direccion,
+        especialidad: especialidad
+    }).then(() => {
+        console.log("Técnico actualizado correctamente.");
+        mostrarTecnicos();
+        ocultarFormulario();
+    }).catch(error => {
+        console.error("Error al actualizar técnico: ", error);
+    });
+}
+
+// Limpiar campos del formulario
+function limpiarCampos() {
+    document.getElementById("txtNombreTec").value = "";
+    document.getElementById("txtCorreoTec").value = "";
+    document.getElementById("txtTelefonoTec").value = "";
+    document.getElementById("txtDireccionTec").value = "";
+    document.getElementById("txtEspecialidadTec").value = "";
+
+    document.querySelector(".tecnicos-btn").setAttribute("onclick", "agregarTecnico()");
+}
+
+// Cargar la lista de técnicos al cargar la página
+document.addEventListener("DOMContentLoaded", mostrarTecnicos);
 
 // ========================================================================================================
 
@@ -172,5 +257,7 @@ window.agregarTecnico = agregarTecnico;
 window.mostrarTecnicos = mostrarTecnicos;
 window.agregarCliente = agregarCliente;
 window.mostrarClientes = mostrarClientes;
+window.mostrarClientes = mostrarFormulario;
+
 
 

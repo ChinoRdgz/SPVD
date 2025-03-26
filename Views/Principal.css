@@ -1,5 +1,9 @@
 body {
     font-family: "Roboto", "Helvetica Neue", "Arial", sans-serif;
+    font-family: Arial, sans-serif;
+    background-color: #f2f5fa;
+    margin: 0;
+    padding: 20px;
 }
 
 body.darkened {
@@ -128,4 +132,112 @@ body.darkened {
 
 .card p {
     color: #333;
+}
+
+
+/* Sección de Técnicos */
+.tecnicos-section {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Título */
+.tecnicos-title {
+    margin-bottom: 15px;
+}
+
+/* Botón principal */
+.tecnicos-btn {
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.tecnicos-btn:hover {
+    background-color: #2563eb;
+}
+
+/* Formulario oculto */
+.tecnicos-form-container {
+    display: none;
+    background: #ffffff;
+    padding: 15px;
+    margin-top: 10px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.tecnicos-input {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.tecnicos-form-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.tecnicos-cancel-btn {
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.tecnicos-cancel-btn:hover {
+    background-color: #dc2626;
+}
+
+/* Tabla */
+.tecnicos-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 15px;
+}
+
+.tecnicos-table th, .tecnicos-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+.tecnicos-table th {
+    background-color: #3b82f6;
+    color: white;
+}
+
+/* Botones de acción */
+.tecnicos-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.tecnicos-edit-btn, .tecnicos-delete-btn {
+    cursor: pointer;
+    padding: 5px 8px;
+    border: none;
+    border-radius: 5px;
+    background-color: transparent;
+}
+
+.tecnicos-edit-btn:hover {
+    color: #facc15;
+}
+
+.tecnicos-delete-btn:hover {
+    color: #ef4444;
 }

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="/SPVD/Views/Principal.css">    
+    <link rel="stylesheet" href="/Views/Principal.css">    
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 
@@ -13,7 +13,7 @@
 <body>
     <div id="sidebar" class="sidebar">
         <button class="closebtn" onclick="closeNav()">x</button>
-        <img src="Images/VanguardiaDigital.png" alt="">
+        <img src="/Images/VanguardiaDigital.png" alt="">
         <a href="#" onclick="showSection('dashboard')">
             <i class='bx bxs-dashboard'></i>
             <span>Dashboard</span>
@@ -93,18 +93,44 @@
     </section>
     <!-- ------------------------------------------------------------------- -->
     <section class="home-section" id="Tecnicos" style="display:none;">
-        <button class="openbtn" onclick="openNav()">></button>
-        <h2>puro ingeniero perron</h2>
-        <input type="text" id="txtNombreTec" placeholder="Nombre">
-        <input type="text" id="txtApellidoTec" placeholder="Apellido">
-        <input type="text" id="txtTelefonoTec" placeholder="Telefono">
-        <input type="text" id="txtCorreoTec" placeholder="Correo">
-        <button onclick="agregarTecnico()">Agregar</button>
-        <div id="tecnicos-container"></div>
-        <button onclick="mostrarTecnicos()">mostrar</button>
+        <h2 class="tecnicos-title">Técnicos</h2>
+
+    <!-- Botón para abrir formulario -->
+    <button class="tecnicos-btn" onclick="mostrarFormulario()">Añadir Técnico</button>
+
+    <!-- Formulario oculto -->
+    <div class="tecnicos-form-container" id="formularioTecnico">
+        <h3>Nuevo Técnico</h3>
+        <input type="text" class="tecnicos-input" id="txtNombreTec" placeholder="Nombre del Técnico">
+        <input type="email" class="tecnicos-input" id="txtCorreoTec" placeholder="Correo">
+        <input type="text" class="tecnicos-input" id="txtTelefonoTec" placeholder="Teléfono">
+        <input type="text" class="tecnicos-input" id="txtDireccionTec" placeholder="Dirección">
+        <input type="text" class="tecnicos-input" id="txtEspecialidadTec" placeholder="Tipo de Instalación">
+        
+        <div class="tecnicos-form-buttons">
+            <button class="tecnicos-btn" onclick="agregarTecnico()">Guardar</button>
+            <button class="tecnicos-cancel-btn" onclick="ocultarFormulario()">Cancelar</button>
+        </div>
+    </div>
+
+    <!-- Tabla de Técnicos -->
+    <table class="tecnicos-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre Técnico</th>
+                <th>Correo</th>
+                <th>Teléfono</th>
+                <th>Dirección</th>
+                <th>Tipo de Instalación</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="tecnicos-container"></tbody>
+    </table>
 
     </section>
     <!-- ------------------------------------------------------------------- -->
-    <script type="module" src="/SPVD/Controllers/Principal.js" defer></script>
+    <script type="module" src="/Controllers/Principal.js" defer></script>
 </body>
 </html>
