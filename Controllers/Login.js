@@ -15,49 +15,55 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-console.log("Firebase inicializado:", app);
-console.log("Firestore conectado:", db);
+import { getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-async function agregarRegistroBitacora() {
-    console.log("Intentando agregar registro a la bitácora...");
+// Verificar si Firestore está accesible
+async function verificarFirestore() {
     try {
-        const accion = "Inicio de sesión por admin";
-        const nuevoRegistro = {
-            accion: accion,
-            fecha: new Date().toISOString()
-        };
-
-        await addDoc(collection(db, "Bitacora"), nuevoRegistro);
-        console.log("Registro agregado a la bitácora.");
+        const snapshot = await getDocs(collection(db, "Bitacora"));
+        console.log("🔎 Firestore conectado. Documentos en 'Bitacora':", snapshot.docs.length);
     } catch (error) {
-        console.error("Error al agregar registro a la bitácora:", error);
+        console.error("❌ Error al conectar con Firestore:", error.code, "-", error.message);
     }
 }
 
+// Llamar a la función al cargar la página
+verificarFirestore();
 
-// Hacer que la función sea accesible globalmente
-window.agregarRegistroBitacora = agregarRegistroBitacora;
+
+console.log("Firebase inicializado:", app);
+console.log("Firestore conectado:", db);
+
 
 
 document.addEventListener("DOMContentLoaded", function () {
     // Asociamos el evento al botón con id="login"
-    document.getElementById('login').addEventListener('click', function (event) {
-        event.preventDefault();  // Prevenir la acción predeterminada del botón (aunque no es necesario, ya que no es un submit de un formulario)
+    document.getElementById("login").addEventListener("click", async function (event) {
+        event.preventDefault();  // Evita la acción predeterminada
+    
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        
+        if (username === "admin" && password === "1234") {
+            alert("Bienvenido!");
+            
+            const dbRef = collection(db, "Bitacora");
 
-        // Obtener los valores de usuario y contraseña
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-        const errorMessage = document.getElementById('errorMessage');
-
-        // Validar usuario y contraseña
-        if (username === 'admin' && password === '1234') {
-            alert('Bienvenido!');
-            // Redirigir a la página principal
-            window.location.href = '/Models/Principal.html';
+            // Crear el registro con la acción y la fecha actual
+            const nuevoRegistro = {
+                accion: "Inicio de sesión por admin", // Acción que quieres almacenar
+                fecha: new Date().toISOString()      // Fecha en formato ISO
+            };
+    
+            console.log("📌 Datos preparados para Firestore:", nuevoRegistro);
+    
+            // Agregar el registro a Firestore
+            const docRef = await addDoc(dbRef, nuevoRegistro);
+            console.log("✅ Registro agregado con ID:", docRef.id);
+            
+            window.location.href = "Models/Principal.html";
         } else {
-            // Mostrar el mensaje de error
-            errorMessage.textContent = 'Usuario o contraseña incorrectos.';
-            errorMessage.style.display = 'block';
+            alert("Usuario o contraseña incorrectos.");
         }
     });
 });

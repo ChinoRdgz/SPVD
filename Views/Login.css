@@ -63,7 +63,7 @@ button {
 
 .right-panel {
     width: 50%;
-    background: url('/Images/fondo1.jpg') no-repeat center center;
+    background: url('/SPVD/Images/fondo1.jpg') no-repeat center center;
     background-size: cover;
     border-left: 3px solid #1E1E1E;
 }

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="/Views/Principal.css">    
+    <link rel="stylesheet" href="/SPVD/Views/Principal.css">    
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
@@ -12,7 +12,7 @@
     
     <div id="sidebar" class="sidebar">
         <button class="closebtn" onclick="closeNav()">x</button>
-        <img src="/Images/VanguardiaDigital.png" alt="">
+        <img src="/SPVD/Images/VanguardiaDigital.png" alt="">
 
         <a href="#" onclick="showSection('dashboard')">
             <i class='bx bxs-dashboard'></i>
@@ -36,7 +36,7 @@
         </a>
         
         
-        <a href="#" class="logout-container" onclick="window.location.href='/index.html'">
+        <a href="#" class="logout-container" onclick="window.location.href='/SPVD/index.html'">
             <i class='bx bx-log-out-circle'></i>
             <span>Cerrar sesión</span>
         </a>
@@ -66,7 +66,7 @@
                 <p id="numero-pendientes">0</p>
             </div>
         </div>
-        <img src="/Images/imagen 2.png" alt="">
+        <img src="/SPVD/Images/imagen 2.png" alt="">
     </section>
 
 
@@ -107,7 +107,7 @@
                 <input type="email" class="clientes-input" id="editCorreoCliente" placeholder="Correo">
                 <input type="text" class="clientes-input" id="editDireccionCliente" placeholder="Dirección">
                 <div class="clientes-form-buttons">
-                    <button class="clientes-btn" id="btnGuardarEdicionCliente" onclick="">Guardar</button>
+                    <button class="clientes-btn" id="btnGuardarEdicionCliente" onclick="guardarEdicionCliente()">Guardar</button>
                     <button class="clientes-cancel-btn" onclick="cerrarModalEditarCliente()">Cancelar</button>
                 </div>
             </div>
@@ -222,78 +222,81 @@
         </tbody>
     </table>
 
-    <div class="modal" id="modalReporte">
-        <div class="modal-content">
-            <span class="close" onclick="cerrarModalReporte()">&times;</span>
-            <h3>Añadir Reporte</h3>
-            <div class="modal-columns">
-                <div>
-                    <h4>Datos del Cliente</h4>
-                    <label>Nombre del Cliente</label>
-                    <select id="selectCliente" class="reportes-input"></select>
-                    <label>Teléfono</label>
-                    <input type="text" id="txtTelefonoCliente" class="reportes-input">
-                    <label>Dirección</label>
-                    <input type="text" id="txtDireccionCliente" class="reportes-input">
-                </div>
-                <div>
-                    <h4>Datos del Técnico</h4>
-                    <label>Nombre del Técnico</label>
-                    <select id="selectTecnico" class="reportes-input"></select>
-                    <label>Tipo de Instalación</label>
-                    <select id="selectTipoInstalacion" class="reportes-input">
-                        <option value="Instalación">Instalación</option>
-                        <option value="Mantenimiento">Mantenimiento</option>
-                    </select>
-                    <label>Fecha de Inicio</label>
-                    <input type="date" id="txtFechaInicio" class="reportes-input">
-                    <label>Fecha de Término</label>
-                    <input type="date" id="txtFechaTermino" class="reportes-input">
-                    <label>Observaciones</label>
-                    <textarea id="txtObservaciones" class="reportes-input"></textarea>
-                </div>
+<!-- Modal para agregar reporte -->
+<div class="modal" id="modalReporte">
+    <div class="modal-content">
+        <span class="close" onclick="cerrarModalReporte()">&times;</span>
+        <h3>Añadir Reporte</h3>
+        <div class="modal-columns">
+            <div>
+                <h4>Datos del Cliente</h4>
+                <label>Nombre del Cliente</label>
+                <select id="selectCliente" class="reportes-input"></select>
+                <label>Teléfono</label>
+                <input type="text" id="txtTelefonoCliente" class="reportes-input" readonly>
+                <label>Dirección</label>
+                <input type="text" id="txtDireccionCliente" class="reportes-input" readonly>
             </div>
-            <button class="tecnicos-btn" onclick="guardarReporte()">Guardar Reporte</button>
+            <div>
+                <h4>Datos del Técnico</h4>
+                <label>Nombre del Técnico</label>
+                <select id="selectTecnico" class="reportes-input"></select>
+                <label>Tipo de Instalación</label>
+                <select id="selectTipoInstalacion" class="reportes-input">
+                    <option value="Instalación">Instalación</option>
+                    <option value="Mantenimiento">Mantenimiento</option>
+                </select>
+                <label>Fecha de Inicio</label>
+                <input type="date" id="txtFechaInicio" class="reportes-input">
+                <label>Fecha de Término</label>
+                <input type="date" id="txtFechaTermino" class="reportes-input">
+                <label>Observaciones</label>
+                <textarea id="txtObservaciones" class="reportes-input"></textarea>
+            </div>
         </div>
+        <button class="tecnicos-btn" onclick="guardarReporte()">Guardar Reporte</button>
     </div>
+</div>
 
-    <div class="modal" id="modalEditarReporte" data-report-id="">
-        <div class="modal-content">
-            <span class="close" onclick="cerrarModalEditarReporte()">&times;</span>
-            <h3>Editar Reporte</h3>
-            <div class="modal-columns">
-                <div>
-                    <h4>Datos del Cliente</h4>
-                    <label>Nombre del Cliente</label>
-                    <select id="editSelectCliente" class="reportes-input"></select>
-                    <label>Teléfono</label>
-                    <input type="text" id="editTxtTelefonoCliente" class="reportes-input" >
-                    <label>Dirección</label>
-                    <input type="text" id="editTxtDireccionCliente" class="reportes-input" >
-                </div>
-                <div>
-                    <h4>Datos del Técnico</h4>
-                    <label>Nombre del Técnico</label>
-                    <select id="editSelectTecnico" class="reportes-input"></select>
-                    <label>Tipo de Instalación</label>
-                    <select id="editSelectTipoInstalacion" class="reportes-input">
-                        <option value="Instalación">Instalación</option>
-                        <option value="Mantenimiento">Mantenimiento</option>
-                    </select>
-                    <label>Fecha de Inicio</label>
-                    <input type="date" id="editTxtFechaInicio" class="reportes-input">
-                    <label>Fecha de Término</label>
-                    <input type="date" id="editTxtFechaTermino" class="reportes-input">
-                    <label>Observaciones</label>
-                    <textarea id="editTxtObservaciones" class="reportes-input"></textarea>
-                </div>
+<!-- Modal para editar reporte -->
+<div class="modal" id="modalEditarReporte" data-report-id="">
+    <div class="modal-content">
+        <span class="close" onclick="cerrarModalEditarReporte()">&times;</span>
+        <h3>Editar Reporte</h3>
+        <div class="modal-columns">
+            <div>
+                <h4>Datos del Cliente</h4>
+                <label>Nombre del Cliente</label>
+                <select id="editSelectCliente" class="reportes-input"></select>
+                <label>Teléfono</label>
+                <input type="text" id="editTxtTelefonoCliente" class="reportes-input">
+                <label>Dirección</label>
+                <input type="text" id="editTxtDireccionCliente" class="reportes-input">
             </div>
-            <div class="reportes-form-buttons">
-                <button class="reportes-btn" onclick="guardarEdicionReporte()">Guardar Cambios</button>
-                <button class="reportes-cancel-btn" onclick="cerrarModalEditarReporte()">Cancelar</button>
+            <div>
+                <h4>Datos del Técnico</h4>
+                <label>Nombre del Técnico</label>
+                <select id="editSelectTecnico" class="reportes-input"></select>
+                <label>Tipo de Instalación</label>
+                <select id="editSelectTipoInstalacion" class="reportes-input">
+                    <option value="Instalación">Instalación</option>
+                    <option value="Mantenimiento">Mantenimiento</option>
+                </select>
+                <label>Fecha de Inicio</label>
+                <input type="date" id="editTxtFechaInicio" class="reportes-input">
+                <label>Fecha de Término</label>
+                <input type="date" id="editTxtFechaTermino" class="reportes-input">
+                <label>Observaciones</label>
+                <textarea id="editTxtObservaciones" class="reportes-input"></textarea>
             </div>
         </div>
+        <div class="reportes-form-buttons">
+            <button class="reportes-btn" onclick="guardarEdicionReporte()">Guardar Cambios</button>
+            <button class="reportes-cancel-btn" onclick="cerrarModalEditarReporte()">Cancelar</button>
+        </div>
     </div>
+</div>
+
 </section>
 
 
@@ -313,6 +316,6 @@
     </table>
 </section>
 
-    <script type="module" src="/Controllers/Principal.js" defer></script>
+    <script type="module" src="/SPVD/Controllers/Principal.js" defer></script>
 </body>
 </html>

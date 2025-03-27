@@ -17,26 +17,28 @@ const db = getFirestore(app);
 console.log("Firebase inicializado:", app);
 console.log("Firestore conectado:", db);
 
-// Mostrar el formulario de Técnicos como ventana flotante
 function mostrarFormulario() {
     document.getElementById("formularioTecnico").style.display = "block";
     document.getElementById("formOverlay").style.display = "block";
 }
-
 // Ocultar el formulario flotante y limpiar campos
 function ocultarFormulario() {
-    document.getElementById("formularioTecnico").style.display = "none";
-    document.getElementById("formOverlay").style.display = "none";
-    limpiarCampos();
+    const formulario = document.getElementById("formularioTecnico");
+    const overlay = document.getElementById("formOverlay");
+
+    if (formulario) formulario.style.display = "none";
+    if (overlay) overlay.style.display = "none";
+
+    if (typeof limpiarCampos === "function") limpiarCampos();
 }
 
 // Agregar técnico a Firestore
 async function agregarTecnico() {
-    let nombre = document.getElementById("txtNombreTec").value;
-    let correo = document.getElementById("txtCorreoTec").value;
-    let telefono = document.getElementById("txtTelefonoTec").value;
-    let direccion = document.getElementById("txtDireccionTec").value;
-    let especialidad = document.getElementById("txtEspecialidadTec").value;
+    let nombre = document.getElementById("txtNombreTec")?.value.trim() || "";
+    let correo = document.getElementById("txtCorreoTec")?.value.trim() || "";
+    let telefono = document.getElementById("txtTelefonoTec")?.value.trim() || "";
+    let direccion = document.getElementById("txtDireccionTec")?.value.trim() || "";
+    let especialidad = document.getElementById("txtEspecialidadTec")?.value.trim() || "";
 
     if (!nombre || !correo || !telefono || !direccion || !especialidad) {
         alert("Por favor, llena todos los campos.");
@@ -44,7 +46,8 @@ async function agregarTecnico() {
     }
 
     try {
-        await addDoc(collection(db, "Tecnicos"), {
+        console.log("🟢 Agregando técnico...");
+        const tecnicoRef = await addDoc(collection(db, "Tecnicos"), {
             nombre,
             correo,
             telefono,
@@ -52,47 +55,59 @@ async function agregarTecnico() {
             especialidad
         });
 
-        console.log("Técnico agregado correctamente.");
-        mostrarTecnicos();
-        ocultarFormulario();
-        registrarTecnico();
+        console.log("✅ Técnico agregado con ID:", tecnicoRef.id);
+
+        if (typeof mostrarTecnicos === "function") mostrarTecnicos();
+        if (typeof ocultarFormulario === "function") ocultarFormulario();
+
     } catch (error) {
-        console.error("Error al agregar técnico:", error);
+        console.error("❌ Error al agregar técnico:", error);
         alert("Ocurrió un error al agregar el técnico. Inténtalo de nuevo.");
     }
 }
 
+
+
 // Display technicians from Firebase
 async function mostrarTecnicos() {
     const tbody = document.getElementById("tecnicos-container");
-    tbody.innerHTML = ""; // Clear the table content before appending rows
+    if (!tbody) {
+        console.error("⚠️ No se encontró el contenedor 'tecnicos-container' en el DOM.");
+        return;
+    }
+
+    tbody.innerHTML = ""; // Limpiar el contenido de la tabla antes de agregar filas
 
     try {
+        console.log("🔄 Obteniendo técnicos de Firestore...");
         const querySnapshot = await getDocs(collection(db, "Tecnicos"));
-        const uniqueIds = new Set(); // Track unique IDs to prevent duplicates
+        if (querySnapshot.empty) {
+            console.warn("⚠️ No se encontraron técnicos en la colección.");
+            tbody.innerHTML = `<tr><td colspan="7">No se encontraron técnicos.</td></tr>`;
+            return;
+        }
 
         querySnapshot.forEach((doc) => {
-            if (!uniqueIds.has(doc.id)) { // Only add rows for unique IDs
-                uniqueIds.add(doc.id);
-                const tecnico = doc.data();
-                const fila = `<tr>
-                    <td>${doc.id}</td>
-                    <td>${tecnico.nombre}</td>
-                    <td><a href="mailto:${tecnico.correo}">${tecnico.correo}</a></td>
-                    <td>${tecnico.telefono}</td>
-                    <td>${tecnico.direccion}</td>
-                    <td>${tecnico.especialidad}</td>
-                    <td class="tecnicos-actions">
-                        <i class='bx bx-edit-alt tecnicos-edit-btn' onclick="abrirModalEditar('${doc.id}')"></i>
-                        <i class='bx bxs-user-x tecnicos-delete-btn' onclick="eliminarTecnico('${doc.id}')"></i>
-                    </td>
-                </tr>`;
-                tbody.innerHTML += fila;
-            }
+            const tecnico = doc.data();
+            console.log("🟢 Técnico encontrado:", tecnico);
+
+            const fila = `<tr>
+                <td>${doc.id}</td>
+                <td>${tecnico.nombre}</td>
+                <td><a href="mailto:${tecnico.correo}">${tecnico.correo}</a></td>
+                <td>${tecnico.telefono}</td>
+                <td>${tecnico.direccion}</td>
+                <td>${tecnico.especialidad}</td>
+                <td class="tecnicos-actions">
+                    <i class='bx bx-edit-alt tecnicos-edit-btn' onclick="abrirModalEditar('${doc.id}')"></i>
+                    <i class='bx bxs-user-x tecnicos-delete-btn' onclick="eliminarTecnico('${doc.id}')"></i>
+                </td>
+            </tr>`;
+            tbody.innerHTML += fila;
         });
     } catch (error) {
-        console.error("Error al obtener técnicos:", error);
-        alert("Ocurrió un error al cargar la lista de técnicos.");
+        console.error("❌ Error al obtener técnicos:", error);
+        alert("Ocurrió un error al cargar la lista de técnicos. Revisa la consola para más detalles.");
     }
 }
 
@@ -387,10 +402,10 @@ function cerrarModalCliente() {
 // Add a new client to Firebase
 async function agregarCliente() {
     // Ensure these IDs match the input fields in the HTML
-    const nombre = document.getElementById("txtNombreCliente")?.value || "";
-    const telefono = document.getElementById("txtTelefonoCliente")?.value || "";
-    const correo = document.getElementById("txtCorreoCliente")?.value || "";
-    const direccion = document.getElementById("txtDireccionCliente")?.value || "";
+    const nombre = document.getElementById("txtNombreCliente")?.value.trim() || "";
+    const telefono = document.getElementById("txtTelefonoCliente")?.value.trim() || "";
+    const correo = document.getElementById("txtCorreoCliente")?.value.trim() || "";
+    const direccion = document.getElementById("txtDireccionCliente")?.value.trim() || "";
 
     if (!nombre || !telefono || !correo || !direccion) {
         alert("Por favor, llena todos los campos.");
@@ -398,32 +413,60 @@ async function agregarCliente() {
     }
 
     try {
-        await addDoc(collection(db, "Clientes"), {
+        const clienteRef = await addDoc(collection(db, "Clientes"), {
             nombre,
             telefono,
             correo,
             direccion
         });
 
-        console.log("Cliente agregado correctamente.");
-        mostrarClientes();
-        cerrarModalCliente();
-        registrarCliente();
+        console.log("✅ Cliente agregado correctamente:", clienteRef.id);
+        
+        // Asegurar que las funciones existen antes de llamarlas
+        if (typeof mostrarClientes === "function") mostrarClientes();
+        if (typeof cerrarModalCliente === "function") cerrarModalCliente();
+        
+        // Crear el registro con la acción y la fecha actual
+        const nuevoRegistro = {
+            accion: "Se agregó un cliente", // Acción que quieres almacenar
+            fecha: new Date().toISOString() // Fecha en formato ISO
+        };
+
+        // Referencia a la colección de registros
+        const registrosRef = collection(db, "Bitacora");
+        const docRef = await addDoc(registrosRef, nuevoRegistro);
+        console.log("✅ Registro agregado con ID:", docRef.id);
+        
     } catch (error) {
-        console.error("Error al agregar cliente:", error);
+        console.error("❌ Error al agregar cliente:", error);
         alert("Ocurrió un error al agregar el cliente. Inténtalo de nuevo.");
     }
 }
 
+
 // Display clients from Firebase
 async function mostrarClientes() {
     const tbody = document.getElementById("clientes-container");
-    tbody.innerHTML = ""; // Clear the table content before appending rows
+    if (!tbody) {
+        console.error("⚠️ No se encontró el contenedor 'clientes-container' en el DOM.");
+        return;
+    }
+
+    tbody.innerHTML = ""; // Limpiar el contenido de la tabla antes de agregar filas
 
     try {
+        console.log("🔄 Obteniendo clientes de Firestore...");
         const querySnapshot = await getDocs(collection(db, "Clientes"));
+        if (querySnapshot.empty) {
+            console.warn("⚠️ No se encontraron clientes en la colección.");
+            tbody.innerHTML = `<tr><td colspan="6">No se encontraron clientes.</td></tr>`;
+            return;
+        }
+
         querySnapshot.forEach((doc) => {
             const cliente = doc.data();
+            console.log("🟢 Cliente encontrado:", cliente);
+
             const fila = `<tr>  
                 <td>${doc.id}</td>
                 <td>${cliente.nombre}</td>
@@ -438,8 +481,8 @@ async function mostrarClientes() {
             tbody.innerHTML += fila;
         });
     } catch (error) {
-        console.error("Error al obtener clientes:", error);
-        alert("Ocurrió un error al cargar la lista de clientes.");
+        console.error("❌ Error al obtener clientes:", error);
+        alert("Ocurrió un error al cargar la lista de clientes. Revisa la consola para más detalles.");
     }
 }
 
@@ -449,45 +492,35 @@ async function eliminarCliente(id) {
     if (!confirmDelete) return;
 
     try {
+        console.log("🟢 Eliminando cliente con ID:", id);
         await deleteDoc(doc(db, "Clientes", id));
-        console.log("Cliente eliminado correctamente.");
-        mostrarClientes();
+        console.log("✅ Cliente eliminado correctamente.");
+
+        // Asegurar que mostrarClientes exista antes de llamarla
+        if (typeof mostrarClientes === "function") {
+            mostrarClientes();
+        }
+
+        // Crear el registro de bitácora
+        const nuevoRegistro = {
+            accion: "Se eliminó un cliente",
+            fecha: new Date().toISOString()
+        };
+
+        console.log("🟡 Agregando registro a la bitácora...");
+        const registrosRef = collection(db, "Bitacora"); // Definir la referencia correcta
+        const docRef = await addDoc(registrosRef, nuevoRegistro);
+        console.log("✅ Registro agregado a la bitácora con ID:", docRef.id);
+
     } catch (error) {
-        console.error("Error al eliminar cliente:", error);
+        console.error("❌ Error al eliminar cliente o agregar a la bitácora:", error);
     }
 }
+
 
 // Edit a client (populate the modal with data)
 
 
-// Update a client in Firebase
-async function actualizarCliente(id) {
-    // Ensure these IDs match the input fields in the "Editar Cliente" modal
-    const nombre = document.getElementById("editNombreCliente")?.value || "";
-    const telefono = document.getElementById("editTelefonoCliente")?.value || "";
-    const correo = document.getElementById("editCorreoCliente")?.value || "";
-    const direccion = document.getElementById("editDireccionCliente")?.value || "";
-
-    if (!nombre || !telefono || !correo || !direccion) {
-        alert("Por favor, llena todos los campos.");
-        return;
-    }
-
-    try {
-        await updateDoc(doc(db, "Clientes", id), {
-            nombre,
-            telefono,
-            correo,
-            direccion
-        });
-
-        console.log("Cliente actualizado correctamente.");
-        mostrarClientes();
-        cerrarModalEditarCliente();
-    } catch (error) {
-        console.error("Error al actualizar cliente:", error);
-    }
-}
 
 // Clear the client form fields
 function limpiarCamposCliente() {
@@ -523,10 +556,14 @@ async function abrirModalEditarCliente(id) {
 
             // Abrir el modal de edición
             document.getElementById("modalEditarCliente").style.display = "block";
+            await cargarClientesReporte();
+            await cargarTecnicosReportes();
+
         } else {
             console.error("No se encontró el cliente.");
             alert("No se encontró el cliente.");
         }
+
     } catch (error) {
         console.error("Error al obtener cliente:", error);
         alert("Ocurrió un error al obtener los datos del cliente.");
@@ -539,13 +576,12 @@ function cerrarModalEditarCliente() {
     document.getElementById("modalEditarCliente").style.display = "none";
     document.getElementById("btnGuardarEdicionCliente").setAttribute("onclick", "");
 }
-
 // Save the edited client data to Firebase
 async function guardarEdicionCliente(id) {
-    const nombre = document.getElementById("editNombreCliente").value;
-    const telefono = document.getElementById("editTelefonoCliente").value;
-    const correo = document.getElementById("editCorreoCliente").value;
-    const direccion = document.getElementById("editDireccionCliente").value;
+    const nombre = document.getElementById("editNombreCliente")?.value.trim() || "";
+    const telefono = document.getElementById("editTelefonoCliente")?.value.trim() || "";
+    const correo = document.getElementById("editCorreoClie  nte")?.value.trim() || "";
+    const direccion = document.getElementById("editDireccionCliente")?.value.trim() || "";
 
     if (!nombre || !telefono || !correo || !direccion) {
         alert("Por favor, llena todos los campos.");
@@ -553,6 +589,7 @@ async function guardarEdicionCliente(id) {
     }
 
     try {
+        console.log("🟢 Actualizando cliente con ID:", id);
         await updateDoc(doc(db, "Clientes", id), {
             nombre,
             telefono,
@@ -560,12 +597,26 @@ async function guardarEdicionCliente(id) {
             direccion
         });
 
-        console.log("Cliente actualizado correctamente.");
-        mostrarClientes();
-        cerrarModalEditarCliente();
-        registrarCliente();
+        // Crear el registro con la acción y la fecha actual
+        const nuevoRegistro = {
+            accion: "Se actualizó un cliente",
+            fecha: new Date().toISOString()
+        };
+
+        console.log("🟡 Agregando registro a la bitácora...");
+        const registrosRef = collection(db, "Bitacora");
+        const docRef = await addDoc(registrosRef, nuevoRegistro);
+        console.log("✅ Registro agregado a la bitácora con ID:", docRef.id);
+
+        console.log("✅ Cliente actualizado correctamente.");
+
+        // Asegurar que las funciones existen antes de llamarlas
+        if (typeof mostrarClientes === "function") mostrarClientes();
+        if (typeof cerrarModalEditarCliente === "function") cerrarModalEditarCliente();
+
     } catch (error) {
-        console.error("Error al actualizar cliente:", error);
+        console.error("❌ Error al actualizar cliente:", error);
+        alert("Ocurrió un error al actualizar el cliente. Inténtalo de nuevo.");
     }
 }
 
@@ -629,66 +680,52 @@ window.guardarEdicionCliente = guardarEdicionCliente;
 // Open the modal for adding a new report
 async function mostrarReportes() {
     const tbody = document.getElementById("reportes-container");
-    
-    // Verifica si el contenedor existe
     if (!tbody) {
-        console.error("No se encontró el contenedor de los reportes.");
+        console.error("⚠️ No se encontró el contenedor 'reportes-container' en el DOM.");
         return;
     }
 
     tbody.innerHTML = ""; // Limpiar el contenido de la tabla antes de agregar filas
 
     try {
-        // Obtiene todos los reportes de la colección 'Reportes'
+        console.log("🔄 Obteniendo reportes de Firestore...");
         const querySnapshot = await getDocs(collection(db, "Reportes"));
-        console.log(querySnapshot.docs.length);  // Verifica si hay documentos
-
         if (querySnapshot.empty) {
-            console.log("No hay reportes en la base de datos.");
-            return; // Salir si no hay reportes
+            console.warn("⚠️ No se encontraron reportes en la colección.");
+            tbody.innerHTML = `<tr><td colspan="10">No se encontraron reportes.</td></tr>`;
+            return;
         }
 
-        // Iterar sobre cada documento de reporte
         for (const docSnapshot of querySnapshot.docs) {
             const reporte = docSnapshot.data();
-            console.log(reporte); // Verifica los datos del reporte
+            console.log("🟢 Reporte encontrado:", reporte);
 
-            // Obtener datos del cliente (corrección aquí)
             const clienteDoc = await getDoc(doc(db, "Clientes", reporte.clienteId));
-            const cliente = clienteDoc.exists() 
-                ? clienteDoc.data() 
-                : { nombre: "N/A", telefono: "N/A", direccion: "N/A" };
+            const cliente = clienteDoc.exists() ? clienteDoc.data() : { nombre: "N/A", telefono: "N/A", direccion: "N/A" };
 
-            // Obtener datos del técnico (corrección aquí)
             const tecnicoDoc = await getDoc(doc(db, "Tecnicos", reporte.tecnicoId));
-            const tecnico = tecnicoDoc.exists() 
-                ? tecnicoDoc.data() 
-                : { nombre: "N/A" };
+            const tecnico = tecnicoDoc.exists() ? tecnicoDoc.data() : { nombre: "N/A" };
 
-            // Crear la fila de la tabla
-            const fila = `
-                <tr>
-                    <td>${docSnapshot.id}</td>
-                    <td>${reporte.tipoInstalacion}</td>
-                    <td>${cliente.nombre}</td>
-                    <td>${cliente.telefono}</td>
-                    <td>${cliente.direccion}</td>
-                    <td>${tecnico.nombre}</td>
-                    <td>${reporte.fechaInicio}</td>
-                    <td>${reporte.fechaTermino}</td>
-                    <td>${reporte.estado}</td>
-                    <td class="reportes-actions">
-                        <i class='bx bx-edit-alt reportes-edit-btn' onclick="abrirModalEditarReporte('${docSnapshot.id}')"></i>
-                        <i class='bx bxs-trash-alt reportes-delete-btn' onclick="eliminarReporte('${docSnapshot.id}')"></i>
-                    </td>
-                </tr>
-            `;
-            // Añadir la fila al contenedor
+            const fila = `<tr>
+                <td>${docSnapshot.id}</td>
+                <td>${reporte.tipoInstalacion}</td>
+                <td>${cliente.nombre}</td>
+                <td>${cliente.telefono}</td>
+                <td>${cliente.direccion}</td>
+                <td>${tecnico.nombre}</td>
+                <td>${reporte.fechaInicio}</td>
+                <td>${reporte.fechaTermino}</td>
+                <td>${reporte.estado}</td>
+                <td class="reportes-actions">
+                    <i class='bx bx-edit-alt reportes-edit-btn' onclick="abrirModalEditarReporte('${docSnapshot.id}')"></i>
+                    <i class='bx bxs-trash-alt reportes-delete-btn' onclick="eliminarReporte('${docSnapshot.id}')"></i>
+                </td>
+            </tr>`;
             tbody.innerHTML += fila;
         }
     } catch (error) {
-        console.error("Error al obtener reportes:", error);
-        alert("Ocurrió un error al cargar la lista de reportes.");
+        console.error("❌ Error al obtener reportes:", error);
+        alert("Ocurrió un error al cargar la lista de reportes. Revisa la consola para más detalles.");
     }
 }
 // Guardar un nuevo reporte en Firestore
@@ -722,6 +759,14 @@ async function guardarReporte() {
         mostrarReportes();  // Refrescar la lista de reportes
         limpiarCamposReporte();  // Limpiar los campos del formulario
         cerrarModalReporte();  // Cerrar el modal
+        // Crear el registro con la acción y la fecha actual
+        const nuevoRegistro = {
+            accion: "se guardo un reporte", // Acción que quieres almacenar
+            fecha: new Date().toISOString()      // Fecha en formato ISO
+        };
+        // Agregar el registro a Firestore
+        const docRef = await addDoc(dbRef, nuevoRegistro);
+        console.log("✅ Registro agregado con ID:", docRef.id);
     } catch (error) {
         console.error("Error al guardar el reporte:", error);
         alert("Ocurrió un error al guardar el reporte.");
@@ -758,6 +803,14 @@ async function guardarEdicionReporte() {
             fechaTermino,
             observaciones
         });
+        // Crear el registro con la acción y la fecha actual
+        const nuevoRegistro = {
+            accion: "se edito un reporte", // Acción que quieres almacenar
+            fecha: new Date().toISOString()      // Fecha en formato ISO
+        };
+        // Agregar el registro a Firestore
+        const docRef = await addDoc(dbRef, nuevoRegistro);
+        console.log("✅ Registro agregado con ID:", docRef.id);
 
         alert("Reporte editado exitosamente.");
         mostrarReportes();  // Refrescar la lista de reportes
@@ -778,6 +831,16 @@ async function eliminarReporte(reporteId) {
         await deleteDoc(doc(db, "Reportes", reporteId));
         alert("Reporte eliminado exitosamente.");
         mostrarReportes();  // Refrescar la lista de reportes
+        const dbRef = collection(db, "Bitacora");
+        
+                // Crear el registro con la acción y la fecha actual
+                const nuevoRegistro = {
+                    accion: "se elimino un reporte", // Acción que quieres almacenar
+                    fecha: new Date().toISOString()      // Fecha en formato ISO
+                };
+                // Agregar el registro a Firestore
+                const docRef = await addDoc(dbRef, nuevoRegistro);
+                console.log("✅ Registro agregado con ID:", docRef.id);
     } catch (error) {
         console.error("Error al eliminar el reporte:", error);
         alert("Ocurrió un error al eliminar el reporte.");
@@ -786,13 +849,26 @@ async function eliminarReporte(reporteId) {
 
 async function abrirModalEditarReporte(id) {
     try {
+        // Limpiar los campos del modal antes de cargar los datos
+        document.getElementById("editSelectCliente").value = "";
+        document.getElementById("editTxtTelefonoCliente").value = "";
+        document.getElementById("editTxtDireccionCliente").value = "";
+        document.getElementById("editSelectTecnico").value = "";
+        document.getElementById("editSelectTipoInstalacion").value = "Instalación";
+        document.getElementById("editTxtFechaInicio").value = "";
+        document.getElementById("editTxtFechaTermino").value = "";
+        document.getElementById("editTxtObservaciones").value = "";
+
         const docRef = doc(db, "Reportes", id);
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
             const reporte = docSnap.data();
 
-            // Populate the modal fields with the report's data
+            // Asignar el ID del reporte al atributo data-report-id del modal
+            document.getElementById("modalEditarReporte").dataset.reportId = id;
+
+            // Cargar los datos del reporte en los campos del modal
             document.getElementById("editSelectCliente").value = reporte.clienteId || "";
             document.getElementById("editTxtTelefonoCliente").value = reporte.telefono || "";
             document.getElementById("editTxtDireccionCliente").value = reporte.direccion || "";
@@ -802,20 +878,87 @@ async function abrirModalEditarReporte(id) {
             document.getElementById("editTxtFechaTermino").value = reporte.fechaTermino || "";
             document.getElementById("editTxtObservaciones").value = reporte.observaciones || "";
 
-            // Load client and technician dropdowns with the correct data
-            await cargarClientesReportes(reporte.clienteId);
-            await cargarTecnicosReportes(reporte.tecnicoId);
-
-            // Store the report ID for saving changes
-            document.getElementById("modalEditarReporte").dataset.reportId = id;
-
-            // Show the modal
+            // Mostrar el modal
             document.getElementById("modalEditarReporte").style.display = "block";
         } else {
             console.error("No se encontró el reporte.");
         }
     } catch (error) {
         console.error("Error al obtener el reporte:", error);
+    }
+}
+
+async function cargarClientesReportes() {
+    const selectCliente = document.getElementById("selectCliente");
+    const selectCliente2 = document.getElementById("editSelectCliente");
+
+    if (!selectCliente && !selectCliente2) {
+        console.warn("⚠️ No se encontraron los elementos 'selectCliente' o 'editSelectCliente' en el DOM.");
+        return;
+    }
+
+    // Limpiar opciones de los selects antes de agregar nuevas
+    if (selectCliente) selectCliente.innerHTML = "";
+    if (selectCliente2) selectCliente2.innerHTML = "";
+
+    try {
+        const querySnapshot = await getDocs(collection(db, "Clientes"));
+        querySnapshot.forEach((doc) => {
+            const cliente = doc.data();
+            const option = document.createElement("option");
+            option.value = doc.id;
+            option.textContent = cliente.nombre;
+            // Agregar las opciones a ambos selects
+            if (selectCliente) selectCliente.appendChild(option.cloneNode(true));
+            if (selectCliente2) selectCliente2.appendChild(option.cloneNode(true));
+        });
+    } catch (error) {
+        console.error("Error cargando clientes:", error);
+    }
+
+    // Si estamos editando un reporte, seleccionar el cliente previamente asignado
+    const reportId = document.getElementById("modalEditarReporte").dataset.reportId;
+    if (reportId) {
+        const reportDoc = await getDoc(doc(db, "Reportes", reportId));
+        const reporte = reportDoc.data();
+        selectCliente.value = reporte.clienteId || ""; // Asegúrate de que este valor sea correcto
+    }
+}
+
+
+// Cargar técnicos en los select de los modales
+async function cargarTecnicosReportes() {
+    const selectTecnico = document.getElementById("selectTecnico");
+    const selectTecnico2 = document.getElementById("editSelectTecnico");
+
+    if (!selectTecnico && !selectTecnico2) {
+        console.warn("⚠️ No se encontraron los elementos 'selectTecnico' o 'editSelectTecnico' en el DOM.");
+        return;
+    }
+
+    if (selectTecnico) selectTecnico.innerHTML = ""; // Limpiar opciones antes de agregar nuevas
+    if (selectTecnico2) selectTecnico2.innerHTML = ""; // Limpiar opciones antes de agregar nuevas
+
+    try {
+        const querySnapshot = await getDocs(collection(db, "Tecnicos"));
+        querySnapshot.forEach((doc) => {
+            const tecnico = doc.data();
+            const option = document.createElement("option");
+            option.value = doc.id; // ID del técnico como valor
+            option.textContent = tecnico.nombre; // Nombre del técnico como texto visible
+            if (selectTecnico) selectTecnico.appendChild(option.cloneNode(true));
+            if (selectTecnico2) selectTecnico2.appendChild(option.cloneNode(true));
+        });
+    } catch (error) {
+        console.error("Error cargando técnicos:", error);
+    }
+
+    // Si estamos editando un reporte, seleccionamos el técnico previamente asignado
+    const reportId = document.getElementById("modalEditarReporte").dataset.reportId;
+    if (reportId) {
+        const reportDoc = await getDoc(doc(db, "Reportes", reportId));
+        const reporte = reportDoc.data();
+        selectTecnico.value = reporte.tecnicoId || ""; // Seleccionar el técnico por ID
     }
 }
 
@@ -855,69 +998,8 @@ function limpiarCamposReporte() {
     document.getElementById("txtObservaciones").value = "";
 }
 
-// Load clients into the dropdown for reports
-async function cargarClientesReportes() {
-    const selectCliente = document.getElementById("selectCliente"); 
-    const selectCliente2 = document.getElementById("editSelectCliente");
-// Make sure this is the correct ID for the dropdown
-    selectCliente.innerHTML = ""; // Clear the dropdown options before adding new ones
-    selectCliente2.innerHTML = ""; // Clear the dropdown options before adding new ones
+// Cargar clientes y técnicos en los select de los modales
 
-    try {
-        const querySnapshot = await getDocs(collection(db, "Clientes"));
-        querySnapshot.forEach((doc) => {
-            const cliente = doc.data();
-            const option = document.createElement("option");
-            option.value = doc.id; // Client ID as the value
-            option.textContent = cliente.nombre; // Client name as the display text
-            selectCliente.appendChild(option); // Add option to the dropdown
-            selectCliente2.appendChild(option); // Add option to the dropdown
-
-        });
-    } catch (error) {
-        console.error("Error loading clients:", error);
-    }
-
-    // If editing a report, ensure the client is selected based on the report's clientId
-    const reportId = document.getElementById("modalEditarReporte").dataset.reportId;
-    if (reportId) {
-        const reportDoc = await getDoc(doc(db, "Reportes", reportId));
-        const reporte = reportDoc.data();
-        selectCliente.value = reporte.clienteId || ""; // Select the client in the dropdown
-    }
-}
-
-// Load technicians into the dropdown for reports
-async function cargarTecnicosReportes() {
-    const selectTecnico = document.getElementById("selectTecnico"); 
-    const selectTecnico2 = document.getElementById("editSelectTecnico");
-    // Make sure this is the correct ID for the dropdown
-    selectTecnico.innerHTML = ""; 
-    selectTecnico2.innerHTML = ""; // Clear the dropdown options before adding new ones
-
-    try {
-        const querySnapshot = await getDocs(collection(db, "Tecnicos"));
-        querySnapshot.forEach((doc) => {
-            const tecnico = doc.data();
-            const option = document.createElement("option");
-            option.value = doc.id; // Technician ID as the value
-            option.textContent = tecnico.nombre; // Technician name as the display text
-            selectTecnico.appendChild(option); // Add option to the dropdown
-            selectTecnico2.appendChild(option); // Add option to the dropdown
-
-        });
-    } catch (error) {
-        console.error("Error loading technicians:", error);
-    }
-
-    // If editing a report, ensure the technician is selected based on the report's tecnicoId
-    const reportId = document.getElementById("modalEditarReporte").dataset.reportId;
-    if (reportId) {
-        const reportDoc = await getDoc(doc(db, "Reportes", reportId));
-        const reporte = reportDoc.data();
-        selectTecnico.value = reporte.tecnicoId || ""; // Select the technician in the dropdown
-    }
-}
 
 // Assign the report modal functions to the global scope
 window.abrirModalReporte = abrirModalReporte;
@@ -937,7 +1019,14 @@ window.eliminarReporte = eliminarReporte;
 
 // Open the modal for adding a new report
 function abrirModalReporte() {
-    document.getElementById("modalReporte").style.display = "block";
+    const modalReporte = document.getElementById("modalReporte");
+
+    if (!modalReporte) {
+        console.warn("⚠️ No se encontró el elemento 'modalReporte' en el DOM.");
+        return;
+    }
+
+    modalReporte.style.display = "block";
     limpiarCamposReporte(); // Clear the form fields when opening the modal
     cargarClientesReportes(); // Load clients into the dropdown
     cargarTecnicosReportes(); // Load technicians into the dropdown
@@ -969,28 +1058,13 @@ window.abrirModalCliente = abrirModalCliente;
 window.cerrarModalCliente = cerrarModalCliente;
 window.limpiarCamposCliente = limpiarCamposCliente;
 window.eliminarCliente = eliminarCliente;
-window.actualizarCliente = actualizarCliente;
 window.abrirModalEditarCliente = abrirModalEditarCliente;
 window.cerrarModalEditarCliente = cerrarModalEditarCliente;
 window.guardarEdicionCliente = guardarEdicionCliente;
 window.guardarEdicionReporte = guardarEdicionReporte;
 
 
-async function agregarRegistroBitacoraTecnico() {
-    try {
-        const accion = "Se registró un nuevo técnico";
-        const nuevoRegistro = {
-            accion: accion,  // Descripción de la acción realizada
-            fecha: new Date().toISOString()  // Fecha en formato ISO (compatible con Firestore)
-        };
 
-        await addDoc(collection(db, "Bitacora"), nuevoRegistro);
-        console.log("Registro agregado a la bitácora.");
-    } catch (error) {
-        console.error("Error al agregar registro a la bitácora:", error);
-    }
-}
-window.agregarRegistroBitacoraTecnico = agregarRegistroBitacoraTecnico;
 
 async function mostrarBitacora() {
     try {
@@ -1007,12 +1081,18 @@ async function mostrarBitacora() {
         querySnapshot.forEach((doc) => {
             const evento = doc.data();
 
-            // Manejar la fecha como string directamente (sin .toDate())
-            let fechaFormateada = evento.fecha || "Fecha no disponible"; // Si es string, lo usa directamente
+            // Manejar la fecha como string directamente
+            const fechaFormateada = new Date(evento.fecha).toLocaleString("es-MX", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                hour: "2-digit",
+                minute: "2-digit"
+            });
 
             const fila = `
                 <tr>
-                    <td>${evento.Accion || "Acción no especificada"}</td>
+                    <td>${evento.accion || "Acción no especificada"}</td>
                     <td>${fechaFormateada}</td>
                 </tr>
             `;
@@ -1021,6 +1101,7 @@ async function mostrarBitacora() {
 
     } catch (error) {
         console.error("❌ Error al obtener la bitácora:", error);
+        alert("Ocurrió un error al cargar la bitácora.");
     }
 }
 
@@ -1073,3 +1154,60 @@ document.addEventListener("DOMContentLoaded", () => {
     actualizarDashboard();
 });
 
+// Autorrellenar los datos del cliente seleccionado
+async function rellenarDatosCliente() {
+    const clienteId = document.getElementById("selectCliente").value;
+    if (!clienteId) return;
+
+    try {
+        const clienteDoc = await getDoc(doc(db, "Clientes", clienteId));
+        if (clienteDoc.exists()) {
+            const cliente = clienteDoc.data();
+            document.getElementById("txtTelefonoCliente").value = cliente.telefono || "";
+            document.getElementById("txtDireccionCliente").value = cliente.direccion || "";
+        } else {
+            console.warn("Cliente no encontrado.");
+        }
+    } catch (error) {
+        console.error("Error al rellenar datos del cliente:", error);
+    }
+}
+
+// Autorrellenar los datos del técnico seleccionado
+async function rellenarDatosTecnico() {
+    const tecnicoId = document.getElementById("selectTecnico").value;
+    if (!tecnicoId) return;
+
+    try {
+        const tecnicoDoc = await getDoc(doc(db, "Tecnicos", tecnicoId));
+        if (tecnicoDoc.exists()) {
+            const tecnico = tecnicoDoc.data();
+            document.getElementById("selectTipoInstalacion").value = tecnico.especialidad || "Instalación"; // Por defecto "Instalación"
+        } else {
+            console.warn("Técnico no encontrado.");
+        }
+    } catch (error) {
+        console.error("Error al rellenar datos del técnico:", error);
+    }
+}
+
+// Asignar eventos a los campos desplegables (selects) de cliente y técnico
+document.addEventListener("DOMContentLoaded", () => {
+    const selectCliente = document.getElementById("selectCliente");
+    const selectTecnico = document.getElementById("selectTecnico");
+
+    if (selectCliente) {
+        selectCliente.addEventListener("change", rellenarDatosCliente);
+    } else {
+        console.warn("⚠️ No se encontró el elemento 'selectCliente' en el DOM.");
+    }
+
+    if (selectTecnico) {
+        selectTecnico.addEventListener("change", rellenarDatosTecnico);
+    } else {
+        console.warn("⚠️ No se encontró el elemento 'selectTecnico' en el DOM.");
+    }
+
+    cargarClientesReportes();
+    cargarTecnicosReportes();
+});
